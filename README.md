@@ -18,7 +18,7 @@ A simple Streamlit app demonstrating  our project on Epilepsy.
 
 ## How to access it online
 
-You can access directly the Streamlit Dashboard via this link : #lien à retrouver
+You can access directly the Streamlit Dashboard via this link : https://datascientest-epilepsy.streamlit.app/
 
 # Future improvements 
 

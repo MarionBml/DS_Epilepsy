@@ -19,6 +19,7 @@ Importez votre fichier audio afin d'estimer quels moments représentent des mome
 """)
 
 uploaded_file = st.file_uploader("Chargez votre fichier audio", type=".wav")
+# ajouter component pour laisser à l'utilisateurice la possibilité d'enregistrer un audio
 
 # Choix du modèle
 st.subheader("""Choix du modèle""")
