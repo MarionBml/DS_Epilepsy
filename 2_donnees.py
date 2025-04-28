@@ -7,13 +7,14 @@ import streamlit as st
 st.title('Données')
 st.subheader('Présentation des données')
 with st.expander("🏥 Contexte"):
-    st.markdown("""Au sein de l’Hôpital Universitaire Pitié-Salpêtrière situé à Paris, 
+    st.markdown("""<div style="text-align: justify"> Au sein de l’Hôpital Universitaire Pitié-Salpêtrière situé à Paris, 
         une initiative visant à explorer les complexités de la prise en charge de l'épilepsie est en cours. 
         Plus précisément, des patients pharmacorésistants, candidats à une chirurgie, 
         subissent des procédures méticuleuses d'implantation d'électrodes intracrâniennes. 
         Ces procédures sont planifiées pour étudier en profondeur l'activité cérébrale lors des épisodes de crise 
-        afin de mieux comprendre où se situent les neurones impliqués dans la crise.""")
-    st.markdown("""La phase d’observation s’étend sur deux à trois semaines et est conçue pour capter 
+        afin de mieux comprendre où se situent les neurones impliqués dans la crise. </div>""", unsafe_allow_html=True)
+    st.markdown("")
+    st.markdown("""<div style="text-align: justify"> La phase d’observation s’étend sur deux à trois semaines et est conçue pour capter 
             une compréhension approfondie des dynamiques neurologiques des patients. Pendant cette période, 
             une surveillance continue est mise en place, où les patients et leur environnement immédiat 
             sont documentés grâce à la technologie de vidéo-encéphalographie (VEEG). 
@@ -21,27 +22,31 @@ with st.expander("🏥 Contexte"):
             mais fournit également des ressources précieuses pour ce projet de recherche centré 
             sur la détection des crises à partir d'enregistrements audio. 
             Ces données sont la propriété du centre hospitalier. Un accord a été établi pour utiliser ces données 
-            à des fins de recherche dans le cadre de notre projet.""")
+            à des fins de recherche dans le cadre de notre projet.  </div>""", unsafe_allow_html=True)
+    st.markdown("")
 with st.expander("🎙️ Caractéristiques techniques"):
-    st.markdown("""Dans le cadre de ce projet, seuls l’audio des vidéos, obtenus par la technologie VEEG, 
+    st.markdown("""<div style="text-align: justify"> Dans le cadre de ce projet, seuls l’audio des vidéos, obtenus par la technologie VEEG, 
             ont été pris en compte.   L'instrumentation utilisée pour enregistrer les vidéos 
             comprend la caméra et le microphone suivants : caméra réseau AXIS M5525–E PTZ et microphone AXIS T8351 Mk II 3,5 mm. 
             Le dispositif AXIS T8351 Mk II 3,5 mm est un microphone analogique à faible bruit, de type hémisphérique, 
-            avec une qualité sonore élevée capable de capter le son dans toutes les directions.""")
+            avec une qualité sonore élevée capable de capter le son dans toutes les directions.</div>""", unsafe_allow_html=True)
+    st.markdown("")
     st.image("images/microphones.png","""a) caméra AXIS M5525-E PTZ avec son support d’installation au mur dans la chambre des patients   b) Microphone 3.5 mm AXIS T8351 Mk II""")
-    st.markdown("""Les enregistrements vidéo-EEG ont été analysés par un neurologue qui a sélectionné 6 patients 
+    st.markdown("""<div style="text-align: justify"> Les enregistrements vidéo-EEG ont été analysés par un neurologue qui a sélectionné 6 patients 
             pour un total d'environ 400 minutes (près de 7 heures) d'enregistrements vidéo (15 vidéos). 
             Le neurologue a ensuite annoté le moment précis où les crises se sont produites. 
             En utilisant les enregistrements vidéo des patients, les cliniciens ont une perspective contextuelle 
             de leur environnement immédiat. Certains enregistrements sonores contenaient des périodes de silence, 
             des sons de télévision ou des discours, ainsi que des voix externes lorsque d'autres personnes, 
             telles que des infirmiers, des médecins ou des soignants, parlaient à proximité de la chambre. 
-            Enfin, une période ictale claire a été fournie pour chaque sujet.""")
-    st.markdown("""Étant donné que cette étude vise à détecter les crises épileptiques à partir des enregistrements audio, 
+            Enfin, une période ictale claire a été fournie pour chaque sujet.</div>""", unsafe_allow_html=True)
+    st.markdown("")
+    st.markdown("""<div style="text-align: justify"> Étant donné que cette étude vise à détecter les crises épileptiques à partir des enregistrements audio, 
             les enregistrements audio ont été extraits des vidéos des patients. Différentes fonctions de l’Audio Toolbox™ 
             de MATLAB R2023b ont été utilisées pour importer les fichiers audio. Les fichiers audio-vidéo originaux étaient au format MP4. 
             Le taux d'échantillonnage des enregistrements audio était de 32 kHz et le débit binaire de 62 2400. 
-            Afin de conserver l’anonymat des données, cette étape a été réalisée par le Dr Mario Chavez.""")
+            Afin de conserver l’anonymat des données, cette étape a été réalisée par le Dr Mario Chavez.</div>""", unsafe_allow_html=True)
+    st.markdown("")
 
 st.subheader('Variables pertinentes et cible')
 st.markdown("""Au regard de nos objectifs de détection des crises épileptiques à partir de données audio, 
@@ -102,5 +107,5 @@ with st.expander("🎙️ Biais dans les données"):
     st.caption(""" Étant principalement issues d’enregistrements effectués dans un environnement clinique, 
             nos données peuvent ne pas être totalement représentatives des conditions réelles rencontrées à domicile,
             ce qui pourrait affecter la capacité du modèle à prédire les crises dans d’autres contextes.""")
-st.markdown("""Ces particularités et limitations guideront nos efforts dans l’optimisation du modèle afin d'améliorer
-            la détection des crises, tout en tenant compte des défis posés par la variabilité des enregistrements et le bruit de fond.""")
+st.markdown("""<div style="text-align: justify"> Ces particularités et limitations guideront nos efforts dans l’optimisation du modèle afin d'améliorer
+            la détection des crises, tout en tenant compte des défis posés par la variabilité des enregistrements et le bruit de fond.</div>""", unsafe_allow_html=True)
