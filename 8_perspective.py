@@ -32,7 +32,7 @@ with st.expander("📊 Jeu de données"):
                 L’adoption de techniques d’undersampling a permis d’atténuer cet effet, 
                 mais au prix d’une réduction de la diversité des segments disponibles pour l’apprentissage. 
                 Ce compromis a nécessité plusieurs ajustements et validations pour stabiliser les performances.""")
-with st.expander("🤓Compétences techniques / théoriques"):
+with st.expander("🤓 Compétences techniques / théoriques"):
     st.markdown(""" Le projet a rapidement requis des compétences avancées en deep learning et en traitement du signal audio, 
                 qui sont abordées dans la deuxième moitié de la formation. 
                 Cela a nécessité de prendre de l’avance sur le programme: modélisation CNN sur spectrogrammes, 
@@ -78,14 +78,14 @@ with st.expander("📉 Optimisation des architectures et des fonctions de perte"
                Par ailleurs, l'optimisation des fonctions de perte pourrait être affinée en se basant sur des métriques 
                supplémentaires telles que le recall, pour mieux prendre en compte les faux négatifs, 
                particulièrement critiques dans le contexte de la détection de crises.""")
-with st.expander("👩🏻‍⚕️Évaluation en conditions réalistes"):
+with st.expander("👩🏻‍⚕️ Évaluation en conditions réalistes"):
     st.caption("""Les performances actuelles ont été évaluées sur un jeu de validation provenant du même corpus
                 que les données d’entraînement. Une validation croisée sur plusieurs patients ou sur un corpus indépendant
                 permettrait de mieux évaluer la capacité de généralisation du modèle. 
                De plus, l’implémentation d’un pipeline temps réel, serait un élément essentiel pour permettre l’utilisation 
                de ce modèle dans des dispositifs embarqués, tels que des téléphones portables ou des dispositifs d’assistance, 
                offrant ainsi une réponse immédiate lors d'un épisode de crise.""")
-with st.expander("🏥Vers une application clinique et multimodale"):
+with st.expander("🏥 Vers une application clinique et multimodale"):
     st.caption("""À terme, cette approche pourrait s'intégrer dans un dispositif d’alerte portable et autonome, 
                voire multimodal, en combinant le signal audio avec d'autres données provenant de capteurs 
                (par exemple, vidéo, accéléromètre, électrocardiogramme). Un système de détection multimodal 
