@@ -9,44 +9,44 @@ import streamlit as st
 st.title('Critiques et perspectives')
 st.subheader(':orange[Difficultés rencontrées]')
 with st.expander("🔒 Verrou scientifique principal"):
-    st.markdown(""" Le principal verrou scientifique rencontré durant ce projet a été la complexité de la gestion des données audio, 
+    st.caption(""" Le principal verrou scientifique rencontré durant ce projet a été la complexité de la gestion des données audio, 
                 notamment en ce qui concerne l’équilibrage des classes et la diversité des enregistrements. """)
-    st.markdown("""Le signal audio est particulièrement sensible aux facteurs environnementaux, 
+    st.caption("""Le signal audio est particulièrement sensible aux facteurs environnementaux, 
                 tels que les bruits de fond ou les variations de lieu d’enregistrement (milieu hospitalier), 
                 rendant la détection automatisée des crises épileptiques plus complexe et moins généralisable.""")
 with st.expander("🔮 Prévisionnel"):
-    st.markdown(""" Certaines tâches ont nécessité plus de temps que prévu, en particulier : """)
-    st.markdown(""" * L’exploration des caractéristiques audio, 
+    st.caption(""" Certaines tâches ont nécessité plus de temps que prévu, en particulier : """)
+    st.caption(""" * L’exploration des caractéristiques audio, 
                 qui a demandé une phase importante d’essais et d’erreurs pour identifier les représentations temporelles
                  et fréquentielles les plus pertinentes ;""")
-    st.markdown(""" * Docker, dont la configuration pour l’environnement d’exécution a été plus longue que prévu, 
+    st.caption(""" * Docker, dont la configuration pour l’environnement d’exécution a été plus longue que prévu, 
                 notamment pour la compatibilité avec les bibliothèques spécifiques de traitement audio et d’apprentissage profond ; """)
-    st.markdown(""" * L'exploration de CuDF, envisagée pour optimiser le traitement des données via le GPU, 
+    st.caption(""" * L'exploration de CuDF, envisagée pour optimiser le traitement des données via le GPU, 
                 a finalement été abandonnée en raison de limitations de compatibilité et d’intégration avec les autres outils du pipeline. """)
-    st.markdown("""Aussi, pour une sélection rapide de modèles classiques, nous avons initialement utilisé LazyPredict. 
+    st.caption("""Aussi, pour une sélection rapide de modèles classiques, nous avons initialement utilisé LazyPredict. 
                 Toutefois, nous l’avons écarté pour nous diriger vers des approches plus ciblées.""")
 with st.expander("📊 Jeu de données"):
-    st.markdown(""" L’acquisition de données audio supplémentaires s’est révélée plus difficile que prévu :
+    st.caption(""" L’acquisition de données audio supplémentaires s’est révélée plus difficile que prévu :
                  à ce jour, aucune nouvelle source externe n’a pu être intégrée au projet.""")
-    st.markdown(""" Le déséquilibre entre les classes (crises vs. non-crises) a constitué un obstacle récurrent. 
+    st.caption(""" Le déséquilibre entre les classes (crises vs. non-crises) a constitué un obstacle récurrent. 
                 L’adoption de techniques d’undersampling a permis d’atténuer cet effet, 
                 mais au prix d’une réduction de la diversité des segments disponibles pour l’apprentissage. 
                 Ce compromis a nécessité plusieurs ajustements et validations pour stabiliser les performances.""")
 with st.expander("🤓 Compétences techniques / théoriques"):
-    st.markdown(""" Le projet a rapidement requis des compétences avancées en deep learning et en traitement du signal audio, 
+    st.caption(""" Le projet a rapidement requis des compétences avancées en deep learning et en traitement du signal audio, 
                 qui sont abordées dans la deuxième moitié de la formation. 
                 Cela a nécessité de prendre de l’avance sur le programme: modélisation CNN sur spectrogrammes, 
                 manipulation de bibliothèques audio, 
                 ou encore compréhension des métriques propres à un contexte de déséquilibre de classes. """)
 with st.expander("💻 Ressources informatiques"):
-    st.markdown(""" La puissance de calcul disponible s’est parfois révélée limitée pour l’entraînement de modèles complexes 
+    st.caption(""" La puissance de calcul disponible s’est parfois révélée limitée pour l’entraînement de modèles complexes 
                 sur des jeux de données volumineux. Malgré l'utilisation de GPU, certaines contraintes techniques comme la gestion
                  de la mémoire ou le temps de chargement des données ont constitué des freins. Des ajustements progressifs du batch size,
                  du prétraitement et du pipeline de données ont été nécessaires pour garantir une exécution fluide.""")
 
 
 st.subheader(':green[Perspectives et pistes d\'amélioration]')
-st.caption("""Les résultats obtenus dans ce projet ont permis de mettre en place un pipeline prometteur 
+st.markdown("""Les résultats obtenus dans ce projet ont permis de mettre en place un pipeline prometteur 
            pour la détection des crises d’épilepsie à partir du signal vocal, 
            notamment grâce à l’utilisation de réseaux de neurones convolutifs appliqués à des segments de 2 secondes.
            Cependant, plusieurs axes d’amélioration sont encore à explorer pour renforcer la robustesse, 
