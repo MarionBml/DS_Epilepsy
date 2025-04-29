@@ -1,5 +1,7 @@
 keras
 librosa
+matplotlib
 pandas
+plotly
 streamlit
 tensorflow

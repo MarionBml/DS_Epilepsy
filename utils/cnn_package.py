@@ -3,8 +3,9 @@ import librosa
 import numpy as np
 import pandas as pd
 from keras.models import load_model
+from scipy.io import wavfile
 
-from core_functions import write_log
+from utils.core_functions import write_log
 
 
 # A adapter pour pouvoir utiliser sur un fichier loadé au lieu d'accéder aux paths
