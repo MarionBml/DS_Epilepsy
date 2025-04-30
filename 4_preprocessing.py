@@ -47,8 +47,7 @@ st.markdown("""<div style="text-align: justify"> Un premier pipeline d’analyse
 
 st.markdown("")
 st.badge("Faux dataframe en attente de résolution pour avoir accès au vrai df", color='red') #cf code preprocessing_analysis.ipynb
-df = pd.DataFrame(data=np.random.randn(3,100), index=['Precision', 'Recall', 'F1'])
-st.dataframe(df.head())
+df = pd.DataFrame(data=np.random.randn(3,10), index=['Precision', 'Recall', 'F1'])
 
 # Transpose and reset index for Plotly
 df_transposed = df.transpose().reset_index()

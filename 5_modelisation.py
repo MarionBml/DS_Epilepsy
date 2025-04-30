@@ -40,6 +40,7 @@ st.badge("Deuxième approche", color='violet')
 st.badge("Troisième approche", color='violet')
 
 st.subheader("Analyse comparative des approches et choix du modèle")
+st.badge("Analyse comparative des approches", color='violet')
 st.markdown("""<div style="text-align: justify"> L’objectif principal de ce projet était d’explorer différentes stratégies 
             de classification pour la détection de crises d’épilepsie à partir d’enregistrements audio, 
             en tenant compte du déséquilibre intrinsèque des données. Trois grandes familles d’approches ont été testées : </div>""", unsafe_allow_html=True)
@@ -50,51 +51,50 @@ st.markdown("""<div style="text-align: justify"> Chaque approche a été évalu�
             avec un focus particulier sur la classe minoritaire correspondant aux épisodes de crise.</div>""", unsafe_allow_html=True)
 st.markdown("")
 
-st.badge("Approches par Machine Learning supervisé et non supervisé", color='blue')
-st.markdown("""<div style="text-align: justify"> Une première série de pipelines a été mise en œuvre à partir de descripteurs 
+with st.expander("💻 Approches par Machine Learning supervisé et non supervisé"):
+#st.badge("Approches par Machine Learning supervisé et non supervisé", color='blue')
+    st.markdown("""<div style="text-align: justify"> Une première série de pipelines a été mise en œuvre à partir de descripteurs 
             statistiques simples (moyenne et écart-type glissants), suivis d’une réduction de dimensionnalité par ACP (PCA). 
             Plusieurs variantes ont été comparées :
-</div>""", unsafe_allow_html=True)
-st.markdown("* PCA + Gradient Boosting")
-st.markdown("* PCA +  Classification par centroïdes + Gradient Boosting")
-st.markdown("* PCA + Isolation Forest (avec un seuil d’anomalie fixé à 5 %)")
-st.markdown("""<div style="text-align: justify"> Les performances globales de ces modèles supervisés classiques se sont révélées modestes, 
+    </div>""", unsafe_allow_html=True)
+    st.markdown("* PCA + Gradient Boosting")
+    st.markdown("* PCA +  Classification par centroïdes + Gradient Boosting")
+    st.markdown("* PCA + Isolation Forest (avec un seuil d’anomalie fixé à 5 %)")
+    st.markdown("""<div style="text-align: justify"> Les performances globales de ces modèles supervisés classiques se sont révélées modestes, 
             en particulier pour la détection des épisodes de crise. L’approche semi-supervisée par Isolation Forest a toutefois 
             montré de meilleures capacités de rappel, en identifiant efficacement certains segments audio atypiques. 
             Cependant, sa dépendance à un paramétrage nécessitant une estimation a priori du taux de crises limite 
-            sa généralisation à des contextes réels.
-</div>""", unsafe_allow_html=True)
-st.markdown("")
+            sa généralisation à des contextes réels.</div>""", unsafe_allow_html=True)
+    st.markdown("")
 
-st.badge("Modèle Wav2Vec2 avec stratégies d’équilibrage", color='blue')
-st.markdown("""<div style="text-align: justify"> Le modèle pré entraîné Wav2Vec2 a été testé avec des segments audio de 1 et 2 secondes, 
+with st.expander("🔊 Modèle Wav2Vec2 avec stratégies d’équilibrage"):
+#st.badge("Modèle Wav2Vec2 avec stratégies d’équilibrage", color='blue')
+    st.markdown("""<div style="text-align: justify"> Le modèle pré entraîné Wav2Vec2 a été testé avec des segments audio de 1 et 2 secondes, 
             en appliquant une stratégie d’undersampling pour compenser le déséquilibre de classes. 
             Pour des segments d’1 seconde, la précision globale atteignait 0.89, mais la détection des crises 
             restait faible (F1-score = 0.36). Avec des segments de 2 secondes, le F1-score pour la classe "crise" montait à 0.54, 
-            suggérant une meilleure captation des dynamiques acoustiques spécifiques.
-</div>""", unsafe_allow_html=True)
-st.markdown("")
-st.markdown("""<div style="text-align: justify"> Une variante supervisée, combinant les embeddings Wav2Vec2 
+            suggérant une meilleure captation des dynamiques acoustiques spécifiques.</div>""", unsafe_allow_html=True)
+    st.markdown("")
+    st.markdown("""<div style="text-align: justify"> Une variante supervisée, combinant les embeddings Wav2Vec2 
             à un classificateur Gradient Boosting entraîné par lot sur GPU, n’a pas permis d’amélioration significative. 
             Le modèle restait très performant sur la classe majoritaire (F1-score = 0.98) mais quasiment aveugle 
             aux épisodes de crise (F1-score = 0.10), illustrant la difficulté à équilibrer la classification avec cette architecture.
-</div>""", unsafe_allow_html=True)
-st.markdown("")
+    </div>""", unsafe_allow_html=True)
+    st.markdown("")
 
-st.badge("Réseau de Neurones Convolutif (CNN)", color='blue')
-st.markdown("""<div style="text-align: justify"> L’approche par CNN s’est démarquée par des performances nettement 
+with st.expander("🧠 Réseau de Neurones Convolutif (CNN)"):
+#st.badge("Réseau de Neurones Convolutif (CNN)", color='blue')
+    st.markdown("""<div style="text-align: justify"> L’approche par CNN s’est démarquée par des performances nettement 
             plus équilibrées, et ce pour les deux durées de segments testées. Pour des segments d’1 seconde, 
             le modèle atteignait un F1-score de 0.70 pour la classe "crise", avec un rappel de 0.59. 
             En passant à des segments de 2 secondes, les performances s'améliorent encore (F1-score = 0.79 ; rappel = 0.72), 
-            traduisant une meilleure captation des motifs temporels caractéristiques des épisodes.
-</div>""", unsafe_allow_html=True)
-st.markdown("")
-st.markdown("""<div style="text-align: justify"> L’analyse a également montré que des fenêtres trop longues (10 secondes) 
+            traduisant une meilleure captation des motifs temporels caractéristiques des épisodes. </div>""", unsafe_allow_html=True)
+    st.markdown("")
+    st.markdown("""<div style="text-align: justify"> L’analyse a également montré que des fenêtres trop longues (10 secondes) 
             dégradent les performances tout en alourdissant considérablement la charge computationnelle. 
             Un compromis optimal a été trouvé avec une fenêtre de 2 secondes, 
-            suffisante pour extraire les dynamiques pertinentes tout en restant adaptée à un traitement efficace.
-</div>""", unsafe_allow_html=True)
-st.markdown("")
+            suffisante pour extraire les dynamiques pertinentes tout en restant adaptée à un traitement efficace.</div>""", unsafe_allow_html=True)
+    st.markdown("")
 
 st.badge("Choix du modèle", color='green')
 st.markdown("""<div style="text-align: justify"> À l’issue de cette analyse, le modèle CNN entraîné sur des segments audio 
