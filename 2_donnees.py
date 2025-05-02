@@ -31,7 +31,7 @@ with st.expander("🎙️ Caractéristiques techniques"):
             Le dispositif AXIS T8351 Mk II 3,5 mm est un microphone analogique à faible bruit, de type hémisphérique, 
             avec une qualité sonore élevée capable de capter le son dans toutes les directions.</div>""", unsafe_allow_html=True)
     st.markdown("")
-    st.image("images/microphones.png","""a) caméra AXIS M5525-E PTZ avec son support d’installation au mur dans la chambre des patients   b) Microphone 3.5 mm AXIS T8351 Mk II""")
+    st.image("images/2_microphones.png","""a) caméra AXIS M5525-E PTZ avec son support d’installation au mur dans la chambre des patients   b) Microphone 3.5 mm AXIS T8351 Mk II""")
     st.markdown("""<div style="text-align: justify"> Les enregistrements vidéo-EEG ont été analysés par un neurologue qui a sélectionné 6 patients 
             pour un total d'environ 400 minutes (près de 7 heures) d'enregistrements vidéo (15 vidéos). 
             Le neurologue a ensuite annoté le moment précis où les crises se sont produites. 

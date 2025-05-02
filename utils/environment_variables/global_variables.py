@@ -5,6 +5,6 @@
 
 #Marion
 
-ROOT = r'C:\Users\mario\OneDrive\Documents\Data\DataScientest'
+ROOT = '.'
 SOURCE_FOLDER = 'DATA'
 OUTPUT_FOLDER = 'output'

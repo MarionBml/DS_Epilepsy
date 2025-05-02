@@ -32,7 +32,7 @@ st.markdown("""<div style="text-align: justify"> Nous avons également extrait d
             que la moyenne, l’écart-type, et un décalage temporel de 3 secondes pour intégrer une dynamique temporelle 
             de 4 secondes.</div>""", unsafe_allow_html=True)
 st.markdown("")
-st.image("images/windows.png","""Pour chaque fenêtre, une séquence de 4 secondes est constituée
+st.image("images/4_windows.png","""Pour chaque fenêtre, une séquence de 4 secondes est constituée
 en incluant la seconde actuelle (:violet[en violet]) et les trois secondes qui la précèdent (:blue[en bleu]).
 Cette approche permet de capturer la dynamique temporelle des signaux en conservant un historique pertinent pour l’analyse,
 tout en assurant une dissociation claire entre les séquences utilisées pour l’entraînement et celles destinées au test.""")

@@ -58,9 +58,45 @@ with st.expander("MFCC (Mel-Frequency Cepstral Coefficients)"):
                notamment lors des événements de crise.""")
 
 st.subheader('Visualisation des caractéristiques audio')
+
+st.write("""Différentes représentations du signal audio permettent de visualiser les changements acoustiques associés à une crise: """)
+
+tab1, tab2, tab3  = st.tabs(["Tracé Audio","Distribution", "Spectrogramme"])
+tab1.write("Tracé audio brut du signal temporel.")
+tab1.caption("""La courbe illustre l'évolution de l'amplitude du signal sur la durée de l’enregistrement.
+             Les lignes en pointillés indiquent le début (:red[rouge]) et la fin (:green[vert]) de la crise.""")
+tab1.image("images/3_trace_audio.png")
+
+tab2.write("Histogramme de distribution des amplitudes du signal audio")
+tab2.caption("""Représentation de la densité des valeurs enregistrées. """)
+tab2.image("images/3_distribution.png")
+
+tab3.write("Spectrogramme")
+tab3.caption("""Le graphique représente l’intensité du signal (en dB) selon le temps (x) et la fréquence (y). 
+             Les couleurs plus chaudes indiquent une plus grande intensité.""")
+tab3.image("images/3_spectrogramme.png")
+
+st.markdown("")
 st.markdown("""Pour chaque caractéristique extraite, des visualisations ont été générées sous forme de graphiques :""")
 
-st.markdown(""":orange-background[Générer graphes sous streamlit]""")
+tab4, tab5, tab6, tab7, tab8 = st.tabs(["RMSE","Spectral Centroid", "Spectral Bandwith", "Spectral Rolloff", "Zero Crossing"])
+tab4.caption("Courbe d’amplitude mesurant l’énergie locale du signal.")
+tab4.image("images/3_courbe_amplitude.png")
+
+tab5.caption("Fréquence moyenne pondérée du spectre, perçue comme la “hauteur” du son. ")
+tab5.image("images/3_spectral_centroid.png")
+
+tab6.caption(" Largeur spectrale autour du centroïde, représentant la dispersion des fréquences.")
+tab6.image("images/3_spectral_bandwith.png")
+
+tab7.caption("Fréquence sous laquelle se concentre 85% de l’énergie spectrale.")
+tab7.image("images/3_rolloff.png")
+
+tab8.caption("""Fréquence à laquelle le signal traverse l’axe zéro (changement de signe). 
+             Un indicateur de la fréquence du contenu audio.""")
+tab8.image("images/3_zero_crossing.png")
+
+st.markdown("")
 st.markdown("""L’ensemble des graphes montre une nette variation des caractéristiques audio entre les périodes pré-, 
             per- et post-ictales. À partir du début de crise (ligne :red[rouge]), on observe :""")            
 st.markdown("""* Une **augmentation de l’amplitude du signal** (tracé audio brut et RMSE), traduisant une activité sonore plus intense.""")
@@ -129,7 +165,7 @@ with st.expander("Matrice de confusion"):
 with st.expander("AUC-ROC"):
     st.caption(""" Indicateur de la capacité du modèle à séparer les classes, 
                un AUC proche de 1 montrant une bonne séparation.""")
-with st.expander("Courbe de précision-rappel :"):
+with st.expander("Courbe de précision-rappel"):
     st.caption(""" Permet d’évaluer la performance du modèle en fonction des seuils de classification, 
                en mettant particulièrement l’accent sur la détection des crises.""")
 st.markdown("""<div style="text-align: justify"> Ces différentes métriques et analyses permettent 
