@@ -35,11 +35,13 @@ with st.expander("👩‍⚕️Généralisation aux nouveaux patients"):
                peuvent être fine-tunés sur des données spécifiques (épilepsie) tout en conservant une bonne 
                capacité de généralisation, ce qui est crucial dans le contexte de la variabilité interindividuelle.""")
     
-st.badge("Première approche", color='violet')
-st.badge("Deuxième approche", color='violet')
-st.badge("Troisième approche", color='violet')
+st.badge("Première approche (à compléter)", color='violet')
+st.badge("Deuxième approche (à compléter)", color='violet')
+st.badge("Troisième approche (à compléter)", color='violet')
+st.image("images/5_deep_synthesis.png")
 
 st.subheader("Analyse comparative des approches et choix du modèle")
+
 st.badge("Analyse comparative des approches", color='violet')
 st.markdown("""<div style="text-align: justify"> L’objectif principal de ce projet était d’explorer différentes stratégies 
             de classification pour la détection de crises d’épilepsie à partir d’enregistrements audio, 

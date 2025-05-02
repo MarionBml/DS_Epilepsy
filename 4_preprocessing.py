@@ -43,24 +43,10 @@ st.markdown("""<div style="text-align: justify"> Un premier pipeline d’analyse
             suivie d’une réduction de dimensionnalité par PCA, 
             avant l'entraînement d’un classificateur de type Gradient Boosting. 
             Cette première approche n’a toutefois pas produit de résultats satisfaisants, 
-            tant en termes d’accuracy que de F1-score</div>""", unsafe_allow_html=True)
-
+            tant en termes d’accuracy que de F1-score. </div>""", unsafe_allow_html=True)
+st.badge("Pourtant, c'est le recall et non l'accuracy qui pose problème sur le graph", color='red')
 st.markdown("")
-st.badge("Faux dataframe en attente de résolution pour avoir accès au vrai df", color='red') #cf code preprocessing_analysis.ipynb
-df = pd.DataFrame(data=np.random.randn(3,10), index=['Precision', 'Recall', 'F1'])
-
-# Transpose and reset index for Plotly
-df_transposed = df.transpose().reset_index()
-df_transposed = df_transposed.melt(id_vars='index', var_name='Metric', value_name='Value')
-
-# Create interactive plot
-fig = px.line(df_transposed, x='index', y='Value', color='Metric',
-              title='Logistic Regression results, with various K',
-              labels={'index': 'K significant features kept', 'Value': 'Percentages (%)'},
-              color_discrete_sequence=px.colors.qualitative.Safe)
-
-# Display in Streamlit
-st.plotly_chart(fig)
+st.image("images/4_logistic_regression.png")
 
 st.badge("Amélioration du pipeline et comparaison de méthodes", color='blue')
 st.markdown("""<div style="text-align: justify"> Un premier pipeline d’analyse a été mis en place : 
@@ -79,10 +65,10 @@ st.markdown("""* **PCA + IsolationForest** (avec un ratio d’anomalies fixé à
             correspondant à la proportion des crises dans les données d'entraînement)""")
 st.markdown("")
 
-st.badge("Faux dataframe en attente de résolution pour avoir accès au vrai df", color='red')
-dic = {"Isolation Forest 5%": [95, 95, 98],
-       "Centroids": [18, 95, 5],
-       "Default": [98, 10, 15]}
+# Valeurs obtenues en faisant tourner le code"preprocessing_analysis.ipynb"
+dic = {"Isolation Forest 5%": [93.35, 95.45, 96.56],
+       "Centroids": [15.81, 97.61, 5.15],
+       "Default": [97.78, 11.60, 19.65]}
 df2 = pd.DataFrame(data=dic, index=['Precision', 'Recall', 'F1'])
 st.dataframe(df2)
 
@@ -102,7 +88,6 @@ fig = px.bar(
 )
 
 st.plotly_chart(fig, use_container_width=True)
-
 
 
 st.markdown("""<div style="text-align: justify"> Les performances ont été évaluées en accuracy, recall et F1-score, 
