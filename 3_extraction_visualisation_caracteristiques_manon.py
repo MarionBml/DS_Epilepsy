@@ -2,7 +2,7 @@
 Visualisation et extraction des caractéristiques audio
 '''
 import streamlit as st
-
+st.title("Visualisation et extraction des caractéristiques audio")
 st.markdown("""<div style="text-align: justify"> Les fichiers audio ont été chargés à partir d'un répertoire spécifique, contenant des enregistrements des patients. Un fichier CSV, nommé audio_features.csv, a été utilisé pour associer chaque fichier audio à une étiquette de crise (indiquant si le fichier correspond à une période de crise ou non) ainsi qu'aux informations temporelles concernant le début et la fin des crises pour chaque enregistrement. Le DataFrame résultant contient les colonnes suivantes : filename, Crise, crise_start, et crise_end. Les labels de crise sont associés aux fichiers audio, permettant ainsi de visualiser et d'annoter les moments précis des crises sur les caractéristiques extraites.</div>""", unsafe_allow_html=True)
 
 st.subheader('Extraction des caractéristiques audio')

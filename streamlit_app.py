@@ -6,7 +6,7 @@ import streamlit as st
 intro_page = st.Page("1_intro_manon.py", title="Introduction", icon="📖")
 data_page = st.Page("2_donnees_manon.py", title="Données", icon="🗂️")
 #analysis_page = st.Page("3_analyse.py", title="Analyse", icon="📈")
-analysis_page = st.Page("3_classification_probleme_manon.py", title="Classification du problème", icon="📈")
+analysis_page = st.Page("3_classification_manon.py", title="Classification du problème", icon="📈")
 visu_page = st.Page("3_extraction_visualisation_caracteristiques_manon.py",title="Visualisation", icon="👀")
 preproc_page = st.Page("4_preprocessing.py", title="Preprocessing", icon="⚙️")
 model_page = st.Page("5_modelisation.py", title="Modélisation", icon="⚖️")
