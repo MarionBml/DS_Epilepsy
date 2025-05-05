@@ -3,16 +3,20 @@
 import streamlit as st
 
 # création menu
-intro_page = st.Page("1_intro.py", title="Introduction", icon="📖")
-data_page = st.Page("2_donnees.py", title="Données", icon="🗂️")
-analysis_page = st.Page("3_analyse.py", title="Analyse", icon="📈")
+intro_page = st.Page("1_intro_manon.py", title="Introduction", icon="📖")
+data_page = st.Page("2_donnees_manon.py", title="Données", icon="🗂️")
+#analysis_page = st.Page("3_analyse.py", title="Analyse", icon="📈")
+analysis_page = st.Page("3_classification_probleme_manon.py", title="Classification du problème", icon="📈")
+visu_page = st.Page("3_extraction_visualisation_caracteristiques_manon.py",title="Visualisation", icon="👀")
 preproc_page = st.Page("4_preprocessing.py", title="Preprocessing", icon="⚙️")
 model_page = st.Page("5_modelisation.py", title="Modélisation", icon="⚖️")
 pred_page = st.Page("6_prediction.py", title="Prédiction", icon="🔮")
-conclu_page = st.Page("7_conclusion.py", title="Conclusion", icon="🥼")
-perspective_page = st.Page("8_perspective.py", title="Perspectives", icon="🔭")
+conclu_page = st.Page("7_conclusion_et_perspectives_manon.py", title="Conclusion et perspectives", icon="🥼")
+#conclu_page = st.Page("7_conclusion.py", title="Conclusion", icon="🥼")
+#perspective_page = st.Page("8_perspective.py", title="Perspectives", icon="🔭")
 
-pg = st.navigation([intro_page, data_page, analysis_page, preproc_page, model_page, pred_page, conclu_page, perspective_page])
+#pg = st.navigation([intro_page, data_page, analysis_page, preproc_page, model_page, pred_page, conclu_page, perspective_page])
+pg = st.navigation([intro_page, data_page, analysis_page, visu_page, preproc_page, model_page, pred_page, conclu_page])
 st.set_page_config(page_title="Epilepsy project", page_icon=":material/edit:")
 pg.run()
 
