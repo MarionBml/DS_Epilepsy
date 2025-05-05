@@ -35,12 +35,43 @@ with st.expander("👩‍⚕️Généralisation aux nouveaux patients"):
                peuvent être fine-tunés sur des données spécifiques (épilepsie) tout en conservant une bonne 
                capacité de généralisation, ce qui est crucial dans le contexte de la variabilité interindividuelle.""")
     
-st.badge("Première approche (à compléter)", color='violet')
-st.badge("Deuxième approche (à compléter)", color='violet')
-st.badge("Troisième approche (à compléter)", color='violet')
-st.image("images/5_deep_synthesis.png")
+st.badge("Première approche (Undersampling + Wav2Vec)", color='violet')
+st.markdown("""<div style="text-align: justify"> Nous avons d'abord appliqué un undersampling sur nos données déséquilibrées. Cela nous a permis de pondérer équitablement chaque classe, 
+            assurant que la classe minoritaire (crise) a autant d'importance que la classe majoritaire (pas crise). Cela évite que le modèle privilégie la classe dominante et améliore la qualité de la classification.
 
+Ensuite, nous avons fine-tuné Wav2vec sur des données audio et l'avons directement utilisé pour la classification.
+</div>""", unsafe_allow_html=True)
+st.markdown("")
+
+st.badge("Deuxième approche (Wav2Vec + GradientBoosting)", color='violet')
+
+st.markdown("""<div style="text-align: justify">Dans notre deuxième approche, Wav2Vec2 a servi à extraire des caractéristiques audio, mais ensuite un autre modèle a été appliqué sur ces caractéristiques pour la classification.
+            
+Nous avons opté pour un Gradient Boosting Classifier, un modèle d'ensemble basé sur une succession d'arbres de décision. Ce choix s'explique par sa capacité à capturer des relations complexes et non linéaires dans les données, ainsi que sa robustesse face aux problèmes de classification déséquilibrée, tel que celui rencontré dans notre cas (épisodes de crises épileptiques vs segments non épileptiques).
+
+</div>""", unsafe_allow_html=True)
+st.markdown("")
+
+st.badge("Troisième approche (CNN)", color='violet')
+st.markdown("""<div style="text-align: justify"> Afin d’explorer une alternative aux modèles pré-entraînés de type Wav2Vec2, 
+            une troisième approche basée sur un réseau neuronal convolutionnel (CNN) 
+            a été développée pour la détection des crises épileptiques à partir de signaux audio. 
+
+Cette méthode s’appuie sur la transformation des signaux acoustiques en spectrogrammes, 
+            qui constituent des représentations visuelles temps-fréquence bien adaptées à l’apprentissage profond.
+
+L’objectif ici est d’exploiter la capacité des CNN à extraire automatiquement des motifs discriminants dans ces représentations spectrales, 
+            sans recourir à des embeddings préexistants. Ce choix méthodologique offre une architecture plus légère et contrôlable, 
+            notamment pour des cas où les ressources de calcul sont limitées ou lorsque l’on souhaite une personnalisation du modèle à un domaine spécifique.
+</div>""", unsafe_allow_html=True)
+
+st.image("images/5_pipeline.png","Pipeline global de traitement mis en oeuvre dans cette troisième approche")
+st.markdown("")
 st.subheader("Analyse comparative des approches et choix du modèle")
+st.image("images/5_deep_synthesis.png","""Stratégies explorées dans nos recherches incluant du deep learning. Sont exclues de ce diagrammes les recherches
+concernant les classifieurs puisque ces recherches n’ont pas porté leurs fruits et les méthodes de pensée & concepts ont été repris et appliqués au deep learning.""")
+
+
 
 st.badge("Analyse comparative des approches", color='violet')
 st.markdown("""<div style="text-align: justify"> L’objectif principal de ce projet était d’explorer différentes stratégies 
