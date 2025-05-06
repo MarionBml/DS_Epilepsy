@@ -144,8 +144,8 @@ class Wav2VecTrained():
         self.processor = AutoProcessor.from_pretrained(saved_model_path)
         return None
 
-    def load_audio(self, filepath: str):
-        audios, sr = load_audio_raw(filepath=filepath)
+    def load_audio(self, file):
+        audios, sr = load_audio_raw(file=file)
         write_log('INFO: Loading recording data for retrained Wav2Vec')
         inputs = self.processor(
             audios,
@@ -157,14 +157,14 @@ class Wav2VecTrained():
         self.input_values = input_values
         return input_values
 
-    def predict(self, filepath: str = None):
+    def predict(self, file:  None):
         if not hasattr(self, 'model'):
             self.load_model()
         if not hasattr(self, 'input_values'):
-            if filepath is None:
+            if file is None:
                 raise Exception('ERROR: Cannot load the audio has the filepath is not provided')
             else:
-                self.load_audio(filepath=filepath)
+                self.load_audio(file=file)
         write_log('INFO: Predicting using Wav2VecTrained')
         predictions = []
         with torch.no_grad():
@@ -189,7 +189,7 @@ class Wav2VecClassified():
     def __init__(self):
         return None
 
-    def load_audio(self, filepath: str):
+    def load_audio(self, file):
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         processor = AutoProcessor.from_pretrained("facebook/wav2vec2-base-960h")
         model = Wav2Vec2ForCTC.from_pretrained(
@@ -197,7 +197,7 @@ class Wav2VecClassified():
         ).to(device)
         with open('pca/wav2vec2_classifier_2sec_pca.pickle', 'rb') as f:
             pca = pickle.load(f)
-        audios, sr = load_audio_raw(filepath=filepath)
+        audios, sr = load_audio_raw(file=file)
         features = []
         output_dict = {}
         for audio in audios:
@@ -225,14 +225,14 @@ class Wav2VecClassified():
         self.model = model
         return model
 
-    def predict(self, filepath: str = None):
+    def predict(self, file: str = None):
         if not hasattr(self, 'model'):
             self.load_model()
         if not hasattr(self, 'input_values'):
-            if filepath is None:
+            if file is None:
                 raise Exception('ERROR: Cannot load the audio has the filepath is not provided')
             else:
-                self.load_audio(filepath=filepath)
+                self.load_audio(file=file)
         write_log('INFO: Predicting using Wav2VecClassified')
         predictions = self.model.predict(self.features)
         self.predictions = predictions
@@ -249,4 +249,4 @@ if __name__ == '__main__':
     # wv.predict(filepath=filepath)
 
     wvc = Wav2VecClassified()
-    wvc.predict(filepath=filepath)
+    wvc.predict(file=file)

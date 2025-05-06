@@ -5,7 +5,7 @@ Prédiction :
 - classification de l'audio à travers le modèle
 
 '''
-from io import StringIO
+import pandas as pd
 import os
 import re
 import streamlit as st
@@ -43,16 +43,21 @@ st.subheader("""Choix du modèle""")
 #duration = st.radio('Choisissez la longueur des tranches (en secondes):', [1, 2, 4])
 model_choice = st.selectbox('Choisissez un modèle', ["Undersampling + Wav2Vec","Wav2Vec + GradientBoosting", "CNN"])
 
+
 if uploaded_file != None :
     if model_choice == "CNN" :
         cnn  = tb.CNN()
-        df_audio_files = cnn.load_audio_cnn(df_audio_files=uploaded_file)
-    
-        model = cnn.load_model()
+        predictions = cnn.predict(uploaded_file)
 
-        predictions = model.predict(df_audio_files)
-        y_predicted = np.argmax(predictions, axis=1)
+    elif model_choice == "Wav2Vec + GradientBoosting" :
+        wvc= tb.Wav2VecClassified()
+        predictions = wvc.predict(uploaded_file)
 
-        df_audio_files['predicted label'] = y_predicted
+    else : 
+        wvt = tb.Wav2VecTrained()
+        predictions = wvt.predict(uploaded_file)
 
-        st.dataframe(df_audio_files.head())
+    df_pred = pd.DataFrame(predictions)
+    df_pred.columns = ["Diagnostic"]
+    st.dataframe(df_pred)
+        #df_pred est un dataframe formé d'une seule colonne qui correspond au diagnostic (1: crise, 0: non-crise) pour chaque bande de 2s
