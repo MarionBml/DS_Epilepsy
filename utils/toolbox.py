@@ -64,14 +64,17 @@ def macro_f1_score(y_true, y_pred):
 DURATION = 2
 
 
-def load_audio_raw(filepath: str):
-    if not os.path.exists(filepath):
-        raise Exception('The provided file does not exist.')
-    if filepath[-4:] != '.wav':
+#def load_audio_raw(filepath: str):
+def load_audio_raw(file):
+    #if not os.path.exists(filepath):
+        #raise Exception('The provided file does not exist.')
+    #if filepath[-4:] != '.wav':
+    if file.type != 'audio/wav':
         raise Exception('The provided file is not a wav file.')
 
     write_log('INFO: Loading the file')
-    y, sr = librosa.load(filepath, sr=None)
+    y, sr = librosa.load(file, sr=None)
+    #y, sr = librosa.load(filepath, sr=None)
     if sr != SAMPLING_RATE:
         y = librosa.resample(y=y, orig_sr=sr, target_sr=SAMPLING_RATE)
         sr = SAMPLING_RATE
@@ -98,8 +101,9 @@ class CNN():
     def __init__(self):
         return None
 
-    def load_audio_cnn(self, filepath: str):
-        audios, sr = load_audio_raw(filepath=filepath)
+    #def load_audio_cnn(self, filepath: str):
+    def load_audio_cnn(self, file):
+        audios, sr = load_audio_raw(file=file)
         write_log('INFO: Loading recording data for CNN')
         features = []
         for audio in audios:
@@ -115,12 +119,16 @@ class CNN():
         self.model = model
         return model
 
-    def predict(self, filepath: str = None):
+    def predict(self, file: None):
+    #def predict(self, filepath: str = None):
         if not hasattr(self, 'X'):
-            if filepath is None:
-                raise Exception('ERROR: Cannot load the audio has the filepath is not provided')
+            #if filepath is None:
+            if file is None:
+                #raise Exception('ERROR: Cannot load the audio as the filepath is not provided')
+                raise Exception('ERROR: Cannot load the audio as the file is not provided')
             else:
-                self.load_audio_cnn(filepath=filepath)
+                #self.load_audio_cnn(filepath=filepath)
+                self.load_audio_cnn(file=file)
         if not hasattr(self, 'model'):
             self.load_model()
         write_log('INFO: Predicting using CNN')
