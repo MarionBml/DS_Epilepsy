@@ -7,13 +7,13 @@ import streamlit as st
 
 st.header("Conclusion")
 
-st.write("""
+st.write("""<div style="text-align: justify">
 Ce projet a permis de comparer différentes approches de classification pour la détection de crises d’épilepsie à partir de signaux audio dans un contexte de données déséquilibrées. 
-
+   
 Après avoir testé des méthodes classiques de machine learning, des modèles pré-entraînés (Wav2Vec2), et des réseaux neuronaux convolutifs (CNN), ce sont les CNN appliqués à des segments de 2 secondes qui ont offert le meilleur compromis entre performances (F1-score = 0.79), robustesse au déséquilibre des classes, et efficacité computationnelle. 
          
 Cette solution constitue aujourd’hui la base retenue pour la suite du projet.
-""")
+</div>""", unsafe_allow_html=True)
 
 st.title('Critiques et perspectives')
 
@@ -45,7 +45,8 @@ with st.expander("💻 Ressources informatiques"):
 # --- Perspectives ---
 st.subheader(':green[Perspectives et pistes d\'amélioration]')
 
-st.markdown("""Les CNN appliqués à des segments de 2 secondes ont montré de bons résultats pour la détection de crises à partir du signal vocal. Néanmoins, plusieurs axes d'amélioration sont à envisager pour renforcer la robustesse, la généralisabilité et l'applicabilité du modèle.""")
+st.markdown("""<div style="text-align: justify"> Les CNN appliqués à des segments de 2 secondes ont montré de bons résultats pour la détection de crises à partir du signal vocal. Néanmoins, plusieurs axes d'amélioration sont à envisager pour renforcer la robustesse, la généralisabilité et l'applicabilité du modèle.</div>""", unsafe_allow_html=True)
+st.markdown("")
 
 with st.expander("📈 Diversification des données"):
     st.caption("Inclure des enregistrements issus de contextes variés (cliniques, linguistiques, acoustiques) permettrait de renforcer la robustesse et la transférabilité du modèle.")

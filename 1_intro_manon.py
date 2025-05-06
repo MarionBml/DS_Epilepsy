@@ -7,7 +7,7 @@ import streamlit as st
 st.title('Introduction')
 st.subheader('Présentation du sujet')
 
-st.markdown("""
+st.markdown("""<div style="text-align: justify">
 
 L’épilepsie est une affection neurologique chronique qui affecte près de 50 millions de personnes dans le monde. Parmi elles, un tiers souffre d’épilepsie pharmaco-résistante, c’est-à-dire que les traitements médicamenteux ne permettent pas de contrôler les crises. Ces patients nécessitent une surveillance attentive de la fréquence et de la sévérité de leurs crises afin d’ajuster les traitements et d’anticiper les risques, mais les outils actuellement disponibles sont souvent intrusifs, coûteux, ou peu pratiques pour une utilisation en continu dans la vie quotidienne.
 
@@ -24,4 +24,4 @@ Ce projet s’inscrit dans une démarche exploratoire visant à évaluer la pert
 - **Développer un système de détection basé sur l’apprentissage automatique**, capable de distinguer les périodes de crise des périodes intercritiques à partir de signaux audio, avec pour ambition une solution confortable, non invasive et facilement intégrable.
   
 - **Poser les bases pour de futurs développements**, en identifiant les limites, en évaluant les performances actuelles, et en ouvrant la voie à des améliorations ultérieures dans un objectif de déploiement en conditions réelles.
-""")
+</div>""", unsafe_allow_html=True)

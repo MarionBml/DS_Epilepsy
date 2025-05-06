@@ -8,9 +8,9 @@ st.title('Données')
 st.subheader('Présentation des données')
 
 with st.expander("🏥 Contexte"):
-    st.markdown("""
+    st.markdown("""<div style="text-align: justify">
     Ce projet de recherche se base sur des données collectées dans le cadre d'une étude menée à l'Hôpital Universitaire Pitié-Salpêtrière à Paris. Les patients épileptiques sélectionnés pour cette étude sont des cas pharmaco-résistants, candidats à une chirurgie. Ils subissent une implantation d'électrodes intracrâniennes dans le but de déterminer le foyer à l'origine des crises. La phase d’observation dure deux à trois semaines et est accompagnée d’une surveillance vidéo-encéphalographique (VEEG), offrant une documentation précieuse de l'activité cérébrale pendant les crises. Ces données ont été fournies par l'hôpital pour cette recherche.
-    """, unsafe_allow_html=True)
+    </div>""", unsafe_allow_html=True)
     st.markdown("")
 
 with st.expander("🎙️ Caractéristiques techniques"):
@@ -33,7 +33,7 @@ Pour détecter les crises épileptiques à partir des données audio, plusieurs 
 - **Interactions avec l’environnement** : Bruits d’objets ou mouvements involontaires pendant une crise.
 
 La variable cible de notre analyse est la **présence ou l'absence de crise épileptique**, détectée à partir du signal audio.
-""")
+""", unsafe_allow_html=True)
 
 st.subheader('Particularités des données')
 st.markdown("""
@@ -43,7 +43,7 @@ Notre jeu de données présente plusieurs spécificités qui influencent l’ana
 - **Exploitation des caractéristiques audio** : Des caractéristiques comme par exemple les **MFCC** ou **l'entropie spectrale** doivent être extraites pour l'apprentissage automatique. 
 
 Ces caractéristiques guideront nos efforts pour optimiser la performance du modèle face aux défis posés par la variabilité et le bruit ambiant.
-""")
+""", unsafe_allow_html=True)
 
 st.subheader('Limites et défis')
 st.markdown("""
@@ -54,4 +54,4 @@ Nous faisons face à plusieurs défis pouvant affecter la performance des modèl
 - **Biais dans les données** : Les données issues d’un environnement clinique peuvent ne pas être représentatives des conditions réelles.
 
 Ces limitations doivent être prises en compte pour améliorer la précision de la détection des crises dans des contextes variés.
-""")
+""", unsafe_allow_html=True)

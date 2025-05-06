@@ -44,7 +44,7 @@ st.markdown("""<div style="text-align: justify"> Un premier pipeline d’analyse
             avant l'entraînement d’un classificateur de type Gradient Boosting. 
             Cette première approche n’a toutefois pas produit de résultats satisfaisants, 
             tant en termes d’accuracy que de F1-score. </div>""", unsafe_allow_html=True)
-st.badge("Pourtant, c'est le recall et non l'accuracy qui pose problème sur le graph", color='red')
+
 st.markdown("")
 st.image("images/4_logistic_regression.png")
 
