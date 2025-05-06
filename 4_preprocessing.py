@@ -73,17 +73,17 @@ df2 = pd.DataFrame(data=dic, index=['Precision', 'Recall', 'F1'])
 st.dataframe(df2)
 
 # Reset index to bring metrics as a column
-df2_melted = df2.reset_index().melt(id_vars='index', var_name='Model', value_name='Score')
+df2_melted = df2.transpose().reset_index().melt(id_vars='index', var_name='Metric', value_name='Score')
 
 # Create grouped bar plot
 fig = px.bar(
     df2_melted,
-    x='Model',
+    x='Metric',
     y='Score',
     color='index',  # Different colors for Precision, Recall, F1
     barmode='group',  # Grouped bars
     title='Model Performance Comparison',
-    labels={'index': 'Metric', 'Score': 'Score (%)'},
+    labels={'index': 'Model', 'Score': 'Score (%)'},
     color_discrete_sequence=px.colors.qualitative.Safe
 )
 

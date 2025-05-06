@@ -7,11 +7,11 @@ Prédiction :
 '''
 import pandas as pd
 import os
-import re
+import openpyxl
 import streamlit as st
 import numpy as np
 from scipy.io import wavfile
-
+import plotly.express as px
 import utils.toolbox as tb
 
 
@@ -33,10 +33,16 @@ selection = st.segmented_control("Audio à analyser :", options, selection_mode=
 st.markdown("")
 if selection == "Importer un fichier":
     uploaded_file = st.file_uploader("Chargez votre fichier audio", type=".wav")
+    labels = st.toggle("Labels disponibles", value=False)
+    if labels == True : 
+        uploaded_labels = st.file_uploader("Chargez vos étiquettes", type=".xlsx")
+        diag = pd.read_excel(uploaded_labels, index_col=0)
+
 else : 
     uploaded_file = st.audio_input("Enregistrez votre audio.")
 st.markdown("")
 st.audio(uploaded_file)
+
 
 # Choix du modèle
 st.subheader("""Choix du modèle""")
@@ -59,5 +65,13 @@ if uploaded_file != None :
 
     df_pred = pd.DataFrame(predictions)
     df_pred.columns = ["Diagnostic"]
+    if labels == True :
+        df_pred = pd.concat([df_pred, diag], axis=1)
     st.dataframe(df_pred)
-        #df_pred est un dataframe formé d'une seule colonne qui correspond au diagnostic (1: crise, 0: non-crise) pour chaque bande de 2s
+        #df_pred est un dataframe formé d'une seule colonne qui correspond au diagnostic (1: crise, 0: non-crise) pour chaque bande
+
+    st.subheader("Représentation graphique")
+    
+    sr = 16000
+    
+    
