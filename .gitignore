@@ -1,0 +1,6 @@
+.devcontainer/*
+*DS_Store
+logs/*
+source/*
+temp/*
+*/__pycache__/*
