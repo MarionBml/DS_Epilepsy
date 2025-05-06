@@ -29,16 +29,18 @@ st.write("""Différentes représentations du signal audio permettent de visualis
 tab1, tab2, tab3  = st.tabs(["Tracé Audio","Distribution", "Spectrogramme"])
 tab1.write("Tracé audio brut du signal temporel.")
 tab1.caption("""La courbe illustre l'évolution de l'amplitude du signal sur la durée de l’enregistrement.
-             Les lignes en pointillés indiquent le début (:red[rouge]) et la fin (:green[vert]) de la crise.""")
+             Les lignes en pointillés indiquent le début (:red[rouge]) et la fin (:blue[bleu]) de la crise.""")
 tab1.image("images/3_trace_audio.png")
 
 tab2.write("Histogramme de distribution des amplitudes du signal audio")
-tab2.caption("""Représentation de la densité des valeurs enregistrées. """)
+tab2.caption("""Cet histogramme permet de visualiser la répartition des valeurs d'amplitude du signal audio. La distribution est fortement centrée autour de 0, ce qui indique que la majorité des amplitudes ont une valeur faible. 
+Cela se traduit par un signal audio avec majoritairement peu de bruit de fond. Dans ce contexte, les amplitudes extrêmes (fortes valeurs positives et négatives qui pourraient être associées aux crises), bien que rares, seront plus facilement identifiées car elles se détacheront plus nettement du reste des valeurs.""")
 tab2.image("images/3_distribution.png")
 
 tab3.write("Spectrogramme")
 tab3.caption("""Le graphique représente l’intensité du signal (en dB) selon le temps (x) et la fréquence (y). 
-             Les couleurs plus chaudes indiquent une plus grande intensité.""")
+             Les couleurs plus chaudes indiquent une plus grande intensité. Les lignes en pointillés indiquent le début (:red[rouge]) et la fin (:green[vert]) de la crise.
+             Ce spectrogramme est essentiel pour visualiser les variations fréquentielles du signal au cours du temps.""")
 tab3.image("images/3_spectrogramme.png")
 
 st.markdown("")
@@ -65,8 +67,7 @@ st.markdown("")
 st.markdown("""L’ensemble des graphes montre une nette variation des caractéristiques audio entre les périodes pré-, 
             per- et post-ictales. À partir du début de crise (ligne :red[rouge]), on observe :""")            
 st.markdown("""* Une **augmentation de l’amplitude du signal** (tracé audio brut et RMSE), traduisant une activité sonore plus intense.""")
-st.markdown("""* Une **énergie accrue dans les hautes fréquences** sur le spectrogramme, 
-            visible par l’apparition de bandes plus claires (vers le haut du spectre).""")
+st.markdown("""* Une **énergie accrue dans les hautes fréquences** sur le spectrogramme, se traduisant par une zone d'activité spectrale plus marquée. """)
 st.markdown("""* Une **augmentation du Spectral Centroid** et du **Spectral Bandwidth**, 
             indiquant que le spectre se déplace vers des fréquences plus élevées et devient plus étalé.""")
 st.markdown("""* Le **Spectral Rolloff** augmente également, signifiant que davantage d’énergie est présente dans les hautes fréquences pendant la crise.""")
