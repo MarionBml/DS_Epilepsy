@@ -47,6 +47,7 @@ platformdirs==4.3.7
 pooch==1.8.2
 protobuf==4.25.7
 pycparser==2.22
+pydub
 Pygments==2.19.1
 pyparsing==3.2.3
 python-dateutil==2.9.0.post0

@@ -9,11 +9,7 @@ import io
 import pandas as pd
 import streamlit as st
 import utils.plots as plots
-from scipy.io import wavfile
-import plotly.express as px
 import utils.toolbox as tb
-import matplotlib.pyplot as plt
-
 
 st.title('Prédiction')
 st.write("""
