@@ -5,14 +5,14 @@ Prédiction :
 - classification de l'audio à travers le modèle
 
 '''
+
 import pandas as pd
-import os
-import openpyxl
 import streamlit as st
-import numpy as np
+import utils.plots as plots
 from scipy.io import wavfile
 import plotly.express as px
 import utils.toolbox as tb
+import matplotlib.pyplot as plt
 
 
 st.title('Prédiction')
@@ -41,18 +41,20 @@ if selection == "Importer un fichier":
 else : 
     uploaded_file = st.audio_input("Enregistrez votre audio.")
 st.markdown("")
-st.audio(uploaded_file)
-
-
-# Choix du modèle
-st.subheader("""Choix du modèle""")
-#duration = st.radio('Choisissez la longueur des tranches (en secondes):', [1, 2, 4])
-model_choice = st.selectbox('Choisissez un modèle', ["Undersampling + Wav2Vec","Wav2Vec + GradientBoosting", "CNN"])
-
 
 if uploaded_file != None :
+    st.subheader("Visualisation de l'enregistrement")
+    st.audio(uploaded_file)
+    plots.plot_audio(uploaded_file)
+
+    # Choix du modèle
+    st.subheader("""Choix du modèle""")
+    #duration = st.radio('Choisissez la longueur des tranches (en secondes):', [1, 2, 4])
+    model_choice = st.selectbox('Choisissez un modèle', ["Undersampling + Wav2Vec","Wav2Vec + GradientBoosting", "CNN"])
+
     if model_choice == "CNN" :
         cnn  = tb.CNN()
+        array = cnn.load_audio_cnn(uploaded_file)
         predictions = cnn.predict(uploaded_file)
 
     elif model_choice == "Wav2Vec + GradientBoosting" :
@@ -65,13 +67,12 @@ if uploaded_file != None :
 
     df_pred = pd.DataFrame(predictions)
     df_pred.columns = ["Diagnostic"]
+    df_pred['Diagnostic'] = df_pred['Diagnostic'].replace([0,1], ["Non-crise", "Crise"])
+    
     if labels == True :
         df_pred = pd.concat([df_pred, diag], axis=1)
     st.dataframe(df_pred)
         #df_pred est un dataframe formé d'une seule colonne qui correspond au diagnostic (1: crise, 0: non-crise) pour chaque bande
 
     st.subheader("Représentation graphique")
-    
-    sr = 16000
-    
-    
+    plots.plot_model(uploaded_file)

@@ -1,12 +1,10 @@
 
 import librosa
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import os
 import pickle
 import torch
-import re
 from joblib import load
 from datetime import datetime
 from keras.models import load_model
@@ -139,7 +137,6 @@ class CNN():
         self.predictions = predictions
         return predictions
 
-
 class Wav2VecTrained():
     def __init__(self):
         saved_model_path = 'models/wav2vec2_retrained_2sec'
@@ -158,6 +155,7 @@ class Wav2VecTrained():
         input_values = inputs.input_values.squeeze()
         self.input_values = input_values
         return input_values
+
 
     def predict(self, file:  None):
         if not hasattr(self, 'model'):
@@ -252,3 +250,4 @@ if __name__ == '__main__':
 
     wvc = Wav2VecClassified()
     wvc.predict(file=file)
+
