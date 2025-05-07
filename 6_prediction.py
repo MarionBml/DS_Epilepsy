@@ -29,14 +29,14 @@ selection = st.segmented_control("Audio à analyser :", options, selection_mode=
 st.markdown("")
 if selection == "Importer un fichier":
     uploaded_file = st.file_uploader("Chargez votre fichier audio", type=".wav")
-    labels = st.toggle("Labels disponibles", value=False)
-    if labels == True : 
-        uploaded_labels = st.file_uploader("Chargez vos étiquettes", type=".xlsx")
-        diag = pd.read_excel(uploaded_labels, index_col=0)
+    #labels = st.toggle("Labels disponibles", value=False)
+    #if labels == True : 
+        #uploaded_labels = st.file_uploader("Chargez vos étiquettes", type=".xlsx")
+        #diag = pd.read_excel(uploaded_labels, index_col=0)
 
 else : 
     uploaded_file = st.audio_input("Enregistrez votre audio.")
-    labels = False
+    #labels = False
 st.markdown("")
 
 if uploaded_file != None :
