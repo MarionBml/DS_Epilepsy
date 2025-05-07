@@ -12,7 +12,6 @@ flatbuffers==25.2.10
 fonttools==4.57.0
 fsspec==2025.3.2
 gast==0.6.0
-go
 google-pasta==0.2.0
 grpcio==1.71.0
 h5py==3.13.0
@@ -39,7 +38,6 @@ namex==0.0.9
 networkx==3.4.2
 numba==0.61.2
 numpy==1.26.4
-openpyxl
 opt_einsum==3.4.0
 optree==0.15.0
 packaging==25.0
