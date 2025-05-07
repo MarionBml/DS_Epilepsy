@@ -4,15 +4,34 @@ import plotly.graph_objs as go
 from pydub import AudioSegment
 import numpy as np
 
-def plot_trace(samples, sr): # -------- Forme d'onde --------
+def plot_trace(samples, sr, df): # -------- Forme d'onde --------
     
     duration = len(samples) / sr
     time = np.linspace(0, duration, num=len(samples))
 
     fig_wave = go.Figure()
-    fig_wave.add_trace(go.Scatter(x=time, y=samples, mode='lines'))
-    fig_wave.update_layout(title="Forme d'onde audio", xaxis_title="Temps (s)", yaxis_title="Amplitude")
-    st.plotly_chart(fig_wave)
+    # Trace audio
+    fig_wave.add_trace(go.Scatter(x=time, 
+                                  y=samples, 
+                                  mode='lines'))
+    # Ajouter des zones de crise
+    for _, row in df.iterrows():
+        if row['diagnostic'] == "Crise":
+            fig_wave.add_vrect(
+                x0=row['start'],
+                x1=row['end'],
+                fillcolor='red',
+                opacity=0.3,
+                line_width=0,
+                annotation_text='Crise',
+                annotation_position='top left'
+        )
+    fig_wave.update_layout(title="Tracé audio avec diagnostic", 
+                           xaxis_title="Temps (s)", 
+                           yaxis_title="Amplitude", 
+                           showlegend= False)
+
+    return st.plotly_chart(fig_wave)
 
 def plot_hist(samples):# -------- Histogramme --------
     
@@ -49,7 +68,7 @@ def plot_spec(samples, sr):# -------- Spectogramme --------
     ))
 
     fig.update_layout(
-        title="Mel-Spectrogramme (interactif)",
+        title="Mel-Spectrogramme",
         xaxis_title="Temps (s)",
         yaxis_title="Fréquence (Hz)",
         yaxis_type="log"
@@ -83,8 +102,39 @@ def plot_audio(file):
 
     return None
         
-def plot_model(file:None, labels:None):
+def plot_model(df, file:None, labels:None):
     samples, sr = transform_audio(file)
-    plot_trace(samples, sr)
-    
+    #plot_trace(samples, sr, df)
+    plot_colored_waveform(samples, sr, df)
     return None
+
+
+def plot_colored_waveform(y, sr, predictions, duration=2):
+    fig = go.Figure()
+    
+    samples_per_segment = int(sr * duration)
+
+    for i, label in enumerate(predictions['diagnostic']):
+        start_sample = i * samples_per_segment
+        end_sample = start_sample + samples_per_segment
+        segment_y = y[start_sample:end_sample]
+        segment_x = np.linspace(start_sample / sr, end_sample / sr, num=len(segment_y))
+
+        color = '#CD5C5C' if label == "Crise" else '#D6E3F8'
+
+        fig.add_trace(go.Scatter(
+            x=segment_x,
+            y=segment_y,
+            mode='lines',
+            line=dict(color=color),
+            name=f'Segment {i} - {"Crise" if label == "Crise" else "Non-Crise"}',
+            showlegend=True
+        ))
+
+    fig.update_layout(
+        title="Trace audio colorée selon la prédiction",
+        xaxis_title="Temps (s)",
+        yaxis_title="Amplitude"
+    )
+
+    return st.plotly_chart(fig)

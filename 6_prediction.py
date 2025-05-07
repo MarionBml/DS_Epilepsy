@@ -5,7 +5,7 @@ Prédiction :
 - classification de l'audio à travers le modèle
 
 '''
-
+import io
 import pandas as pd
 import streamlit as st
 import utils.plots as plots
@@ -40,12 +40,20 @@ if selection == "Importer un fichier":
 
 else : 
     uploaded_file = st.audio_input("Enregistrez votre audio.")
+    labels = False
 st.markdown("")
 
 if uploaded_file != None :
+
+    uploaded_bytes = uploaded_file.read()
+    file_buffer = io.BytesIO(uploaded_bytes)
+    file_buffer.seek(0)  # Toujours repositionner le curseur
+
     st.subheader("Visualisation de l'enregistrement")
-    st.audio(uploaded_file)
-    plots.plot_audio(uploaded_file)
+    st.audio(file_buffer)
+    file_buffer.seek(0)
+    plots.plot_audio(file_buffer)
+    file_buffer.seek(0)
 
     # Choix du modèle
     st.subheader("""Choix du modèle""")
@@ -54,25 +62,23 @@ if uploaded_file != None :
 
     if model_choice == "CNN" :
         cnn  = tb.CNN()
-        array = cnn.load_audio_cnn(uploaded_file)
-        predictions = cnn.predict(uploaded_file)
+        predictions = cnn.predict(file_buffer)
+        file_buffer.seek(0)
 
     elif model_choice == "Wav2Vec + GradientBoosting" :
         wvc= tb.Wav2VecClassified()
-        predictions = wvc.predict(uploaded_file)
+        predictions = wvc.predict(file_buffer)
+        file_buffer.seek(0)
 
     else : 
         wvt = tb.Wav2VecTrained()
-        predictions = wvt.predict(uploaded_file)
+        predictions = wvt.predict(file_buffer)
+        file_buffer.seek(0)
 
-    df_pred = pd.DataFrame(predictions)
-    df_pred.columns = ["Diagnostic"]
-    df_pred['Diagnostic'] = df_pred['Diagnostic'].replace([0,1], ["Non-crise", "Crise"])
+    df = tb.transform(predictions)
+    #st.dataframe(df)
+
+    st.subheader("Représentation graphique du diagnostic")
+    plots.plot_model(df, file_buffer, None)
+    file_buffer.seek(0)
     
-    if labels == True :
-        df_pred = pd.concat([df_pred, diag], axis=1)
-    st.dataframe(df_pred)
-        #df_pred est un dataframe formé d'une seule colonne qui correspond au diagnostic (1: crise, 0: non-crise) pour chaque bande
-
-    st.subheader("Représentation graphique")
-    plots.plot_model(uploaded_file)

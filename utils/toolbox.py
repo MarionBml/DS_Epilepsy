@@ -3,6 +3,7 @@ import librosa
 import numpy as np
 import pandas as pd
 import os
+import io
 import pickle
 import torch
 from joblib import load
@@ -14,6 +15,7 @@ from transformers import AutoModelForAudioClassification, AutoProcessor, Wav2Vec
 ROOT = '.'
 TEMP = 'temp'
 SAMPLING_RATE = 16000
+DURATION = 2 #en secondes
 
 if not os.path.exists(os.path.join(ROOT, TEMP)):
     os.mkdir(os.path.join(ROOT, TEMP))
@@ -59,10 +61,6 @@ def macro_f1_score(y_true, y_pred):
     # Calculate and return the macro F1 score (average of all class F1 scores)
     return K.mean(K.stack(f1_scores))
 
-       
-
-DURATION = 2
-
 
 #def load_audio_raw(filepath: str):
 def load_audio_raw(file):
@@ -73,11 +71,19 @@ def load_audio_raw(file):
         raise Exception('The provided file is not a wav file.')
 
     write_log('INFO: Loading the file')
+
+    if hasattr(file, "read"):  # si c'est un fichier en mémoire (Streamlit)
+        file_content = file.read()
+        file = io.BytesIO(file_content)
+        file.seek(0)  # Rewind for librosa
+
     y, sr = librosa.load(file, sr=None)
     #y, sr = librosa.load(filepath, sr=None)
+
     if sr != SAMPLING_RATE:
         y = librosa.resample(y=y, orig_sr=sr, target_sr=SAMPLING_RATE)
         sr = SAMPLING_RATE
+
     if len(y) / sr > DURATION:
         write_log('INFO: Splitting the file in 2 second chunks')
         recordings = []
@@ -97,13 +103,48 @@ def load_audio_raw(file):
     return [], None
 
 
+#test à la place de load_audio_raw
+def safe_load_audio(uploaded_file, sampling_rate=SAMPLING_RATE, duration=DURATION):
+    """
+    Charge un fichier audio Streamlit (.wav) de manière sécurisée.
+    Découpe automatiquement en segments de `duration` secondes si nécessaire.
+    
+    Retourne : liste de segments (np.ndarray), sample rate
+    """
+    if uploaded_file is None:
+        raise ValueError("Aucun fichier fourni.")
+
+    # Lire le contenu du fichier et l'encapsuler dans un buffer
+    file_content = uploaded_file.read()
+    buffer = io.BytesIO(file_content)
+    buffer.seek(0)
+
+    # Charger avec librosa
+    y, sr = librosa.load(buffer, sr=None)
+
+    # Harmoniser le sampling rate si besoin
+    if sr != sampling_rate:
+        y = librosa.resample(y=y, orig_sr=sr, target_sr=sampling_rate)
+        sr = sampling_rate
+
+    # Découper en segments de `duration` secondes
+    if len(y) / sr > duration:
+        segments = []
+        total_chunks = int(len(y) / sr / duration)
+        for i in range(total_chunks):
+            segments.append(y[sr * i * duration: sr * (i + 1) * duration])
+        return segments, sr
+    else:
+        return [y], sr
+
 class CNN():
     def __init__(self):
         return None
 
     #def load_audio_cnn(self, filepath: str):
     def load_audio_cnn(self, file):
-        audios, sr = load_audio_raw(file=file)
+        #audios, sr = load_audio_raw(file=file)
+        audios, sr = safe_load_audio(file)
         write_log('INFO: Loading recording data for CNN')
         features = []
         for audio in audios:
@@ -144,7 +185,8 @@ class Wav2VecTrained():
         return None
 
     def load_audio(self, file):
-        audios, sr = load_audio_raw(file=file)
+        #audios, sr = load_audio_raw(file=file)
+        audios, sr = safe_load_audio(file)
         write_log('INFO: Loading recording data for retrained Wav2Vec')
         inputs = self.processor(
             audios,
@@ -197,7 +239,8 @@ class Wav2VecClassified():
         ).to(device)
         with open('pca/wav2vec2_classifier_2sec_pca.pickle', 'rb') as f:
             pca = pickle.load(f)
-        audios, sr = load_audio_raw(file=file)
+        #audios, sr = load_audio_raw(file=file)
+        audios, sr = safe_load_audio(file)
         features = []
         output_dict = {}
         for audio in audios:
@@ -251,3 +294,15 @@ if __name__ == '__main__':
     wvc = Wav2VecClassified()
     wvc.predict(file=file)
 
+def transform(predictions, labels=False, diag=None):
+    df= pd.DataFrame(predictions)
+    df.columns = ["diagnostic"]
+    df['diagnostic'] = df['diagnostic'].replace([0,1], ["Non-crise", "Crise"])
+    df['start'] = [i * 2 for i in range(len(predictions))]
+    df['end']= [(i + 1) * 2 for i in range(len(predictions))]
+    df = df.reindex(['start', 'end', 'diagnostic'], axis=1)
+    
+    if labels == True :
+        df = pd.concat([df, diag], axis=1)
+    
+    return df
