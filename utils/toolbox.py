@@ -10,12 +10,18 @@ from joblib import load
 from datetime import datetime
 from keras.models import load_model
 from tensorflow.keras import backend as K
-from transformers import AutoModelForAudioClassification, AutoProcessor, Wav2Vec2ForCTC
+from transformers import (
+    AutoModelForAudioClassification,
+    AutoProcessor,
+    Wav2Vec2ForCTC,
+)
+
 
 ROOT = '.'
 TEMP = 'temp'
 SAMPLING_RATE = 16000
-DURATION = 2 #en secondes
+DURATION = 2  # en secondes
+
 
 if not os.path.exists(os.path.join(ROOT, TEMP)):
     os.mkdir(os.path.join(ROOT, TEMP))
@@ -62,53 +68,48 @@ def macro_f1_score(y_true, y_pred):
     return K.mean(K.stack(f1_scores))
 
 
-#def load_audio_raw(filepath: str):
-def load_audio_raw(file):
-    #if not os.path.exists(filepath):
-        #raise Exception('The provided file does not exist.')
-    #if filepath[-4:] != '.wav':
-    if file.type != 'audio/wav':
-        raise Exception('The provided file is not a wav file.')
+# def load_audio_raw(file):
+#     if file.type != 'audio/wav':
+#         raise Exception('The provided file is not a wav file.')
 
-    write_log('INFO: Loading the file')
+#     write_log('INFO: Loading the file')
 
-    if hasattr(file, "read"):  # si c'est un fichier en mémoire (Streamlit)
-        file_content = file.read()
-        file = io.BytesIO(file_content)
-        file.seek(0)  # Rewind for librosa
+#     if hasattr(file, "read"):  # si c'est un fichier en mémoire (Streamlit)
+#         file_content = file.read()
+#         file = io.BytesIO(file_content)
+#         file.seek(0)  # Rewind for librosa
 
-    y, sr = librosa.load(file, sr=None)
-    #y, sr = librosa.load(filepath, sr=None)
+#     y, sr = librosa.load(file, sr=None)
+#     #y, sr = librosa.load(filepath, sr=None)
 
-    if sr != SAMPLING_RATE:
-        y = librosa.resample(y=y, orig_sr=sr, target_sr=SAMPLING_RATE)
-        sr = SAMPLING_RATE
+#     if sr != SAMPLING_RATE:
+#         y = librosa.resample(y=y, orig_sr=sr, target_sr=SAMPLING_RATE)
+#         sr = SAMPLING_RATE
 
-    if len(y) / sr > DURATION:
-        write_log('INFO: Splitting the file in 2 second chunks')
-        recordings = []
-        for i in range(0, int(len(y) / sr / DURATION)):
-            # wav_file = f"output-{os.path.basename(filepath)[:-4]}-{i}.wav"
-            # wavfile.write(
-            #     os.path.join(
-            #         ROOT,
-            #         TEMP,
-            #         wav_file
-            #     ),
-            #     sr,
-            #     y[sr * i * DURATION: sr * (i + 1) * DURATION]
-            # )
-            recordings.append(y[sr * i * DURATION: sr * (i + 1) * DURATION])
-        return recordings, sr
-    return [], None
+#     if len(y) / sr > DURATION:
+#         write_log('INFO: Splitting the file in 2 second chunks')
+#         recordings = []
+#         for i in range(0, int(len(y) / sr / DURATION)):
+#             # wav_file = f"output-{os.path.basename(filepath)[:-4]}-{i}.wav"
+#             # wavfile.write(
+#             #     os.path.join(
+#             #         ROOT,
+#             #         TEMP,
+#             #         wav_file
+#             #     ),
+#             #     sr,
+#             #     y[sr * i * DURATION: sr * (i + 1) * DURATION]
+#             # )
+#             recordings.append(y[sr * i * DURATION: sr * (i + 1) * DURATION])
+#         return recordings, sr
+#     return [], None
 
 
-#test à la place de load_audio_raw
 def safe_load_audio(uploaded_file, sampling_rate=SAMPLING_RATE, duration=DURATION):
     """
     Charge un fichier audio Streamlit (.wav) de manière sécurisée.
     Découpe automatiquement en segments de `duration` secondes si nécessaire.
-    
+
     Retourne : liste de segments (np.ndarray), sample rate
     """
     if uploaded_file is None:
@@ -124,7 +125,11 @@ def safe_load_audio(uploaded_file, sampling_rate=SAMPLING_RATE, duration=DURATIO
 
     # Harmoniser le sampling rate si besoin
     if sr != sampling_rate:
-        y = librosa.resample(y=y, orig_sr=sr, target_sr=sampling_rate)
+        y = librosa.resample(
+            y=y,
+            orig_sr=sr,
+            target_sr=sampling_rate
+        )
         sr = sampling_rate
 
     # Découper en segments de `duration` secondes
@@ -137,13 +142,12 @@ def safe_load_audio(uploaded_file, sampling_rate=SAMPLING_RATE, duration=DURATIO
     else:
         return [y], sr
 
+
 class CNN():
     def __init__(self):
         return None
 
-    #def load_audio_cnn(self, filepath: str):
     def load_audio_cnn(self, file):
-        #audios, sr = load_audio_raw(file=file)
         audios, sr = safe_load_audio(file)
         write_log('INFO: Loading recording data for CNN')
         features = []
@@ -156,27 +160,33 @@ class CNN():
 
     def load_model(self):
         write_log('INFO: Loading the CNN Keras model')
-        model = load_model('models/wav2vec2_cnn_2sec_model.keras', custom_objects={'macro_f1_score': macro_f1_score})
+        model = load_model(
+            'models/wav2vec2_cnn_2sec_model.keras',
+            custom_objects={
+                'macro_f1_score': macro_f1_score
+            },
+        )
         self.model = model
         return model
 
     def predict(self, file: None):
-    #def predict(self, filepath: str = None):
         if not hasattr(self, 'X'):
-            #if filepath is None:
             if file is None:
-                #raise Exception('ERROR: Cannot load the audio as the filepath is not provided')
-                raise Exception('ERROR: Cannot load the audio as the file is not provided')
+                raise Exception(
+                    'ERROR: Cannot load the audio as the file is not provided'
+                )
             else:
-                #self.load_audio_cnn(filepath=filepath)
                 self.load_audio_cnn(file=file)
+
         if not hasattr(self, 'model'):
             self.load_model()
+
         write_log('INFO: Predicting using CNN')
         prediction_vectors = self.model.predict(self.X)
         predictions = np.argmax(prediction_vectors, axis=1)
         self.predictions = predictions
         return predictions
+
 
 class Wav2VecTrained():
     def __init__(self):
@@ -185,9 +195,9 @@ class Wav2VecTrained():
         return None
 
     def load_audio(self, file):
-        #audios, sr = load_audio_raw(file=file)
         audios, sr = safe_load_audio(file)
         write_log('INFO: Loading recording data for retrained Wav2Vec')
+
         inputs = self.processor(
             audios,
             sampling_rate=sr,
@@ -198,15 +208,18 @@ class Wav2VecTrained():
         self.input_values = input_values
         return input_values
 
-
     def predict(self, file:  None):
         if not hasattr(self, 'model'):
             self.load_model()
+
         if not hasattr(self, 'input_values'):
             if file is None:
-                raise Exception('ERROR: Cannot load the audio has the filepath is not provided')
+                raise Exception(
+                    'ERROR: Cannot load the audio has the filepath is not provided'
+                )
             else:
                 self.load_audio(file=file)
+
         write_log('INFO: Predicting using Wav2VecTrained')
         predictions = []
         with torch.no_grad():
@@ -239,7 +252,7 @@ class Wav2VecClassified():
         ).to(device)
         with open('pca/wav2vec2_classifier_2sec_pca.pickle', 'rb') as f:
             pca = pickle.load(f)
-        #audios, sr = load_audio_raw(file=file)
+
         audios, sr = safe_load_audio(file)
         features = []
         output_dict = {}
@@ -257,7 +270,12 @@ class Wav2VecClassified():
                         output_dict.setdefault(j, []).append(float(val))
                 output_df = pd.DataFrame.from_dict(output_dict)
                 # PCA was trained and pickle with column names
-                output_df.rename(columns={c: str(c) for c in output_df.columns}, inplace=True)
+                output_df.rename(
+                    columns={
+                        c: str(c) for c in output_df.columns
+                    },
+                    inplace=True
+                )
                 features = pca.transform(output_df)
         self.features = features
         return features
@@ -282,27 +300,33 @@ class Wav2VecClassified():
         return predictions
 
 
-if __name__ == '__main__':
-    filepath = r'./source/VID_261.wav'
+# if __name__ == '__main__':
+#     filepath = r'./source/VID_261.wav'
 
-    # cnn = CNN()
-    # predictions = cnn.predict(filepath=filepath)
+#     cnn = CNN()
+#     predictions = cnn.predict(filepath=filepath)
 
-    # wv = Wav2VecTrained()
-    # wv.predict(filepath=filepath)
+#     wv = Wav2VecTrained()
+#     wv.predict(filepath=filepath)
 
-    wvc = Wav2VecClassified()
-    wvc.predict(file=file)
+#     wvc = Wav2VecClassified()
+#     wvc.predict(file=file)
+
 
 def transform(predictions, labels=False, diag=None):
-    df= pd.DataFrame(predictions)
+    df = pd.DataFrame(predictions)
     df.columns = ["diagnostic"]
-    df['diagnostic'] = df['diagnostic'].replace([0,1], ["Non-crise", "Crise"])
+    df['diagnostic'] = df['diagnostic'].replace(
+        {
+            0: "Non-crise",
+            1: "Crise",
+        }
+    )
     df['start'] = [i * 2 for i in range(len(predictions))]
-    df['end']= [(i + 1) * 2 for i in range(len(predictions))]
+    df['end'] = [(i + 1) * 2 for i in range(len(predictions))]
     df = df.reindex(['start', 'end', 'diagnostic'], axis=1)
-    
-    if labels == True :
+
+    if labels:
         df = pd.concat([df, diag], axis=1)
-    
+
     return df

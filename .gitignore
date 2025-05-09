@@ -4,3 +4,4 @@ logs/*
 source/*
 temp/*
 */__pycache__/*
+env/*

@@ -1,12 +1,11 @@
 '''
 Prédiction :
-- glisser fichier audio 
-- choix du modèle 
+- glisser fichier audio
+- choix du modèle
 - classification de l'audio à travers le modèle
 
 '''
 import io
-import pandas as pd
 import streamlit as st
 import utils.plots as plots
 import utils.toolbox as tb
@@ -28,19 +27,16 @@ options = ["Importer un fichier", "Enregistrer du son"]
 selection = st.segmented_control("Audio à analyser :", options, selection_mode="single")
 st.markdown("")
 if selection == "Importer un fichier":
-    uploaded_file = st.file_uploader("Chargez votre fichier audio", type=".wav")
-    #labels = st.toggle("Labels disponibles", value=False)
-    #if labels == True : 
-        #uploaded_labels = st.file_uploader("Chargez vos étiquettes", type=".xlsx")
-        #diag = pd.read_excel(uploaded_labels, index_col=0)
-
-else : 
+    uploaded_file = st.file_uploader(
+        "Chargez votre fichier audio",
+        type=".wav"
+    )
+else:
     uploaded_file = st.audio_input("Enregistrez votre audio.")
-    #labels = False
 st.markdown("")
 
-if uploaded_file != None :
-
+if bool(uploaded_file):
+    # Loading models
     uploaded_bytes = uploaded_file.read()
     file_buffer = io.BytesIO(uploaded_bytes)
     file_buffer.seek(0)  # Toujours repositionner le curseur
@@ -53,28 +49,26 @@ if uploaded_file != None :
 
     # Choix du modèle
     st.subheader("""Choix du modèle""")
-    #duration = st.radio('Choisissez la longueur des tranches (en secondes):', [1, 2, 4])
-    model_choice = st.selectbox('Choisissez un modèle', ["Undersampling + Wav2Vec","Wav2Vec + GradientBoosting", "CNN"])
+    # duration = st.radio('Choisissez la longueur des tranches (en secondes):', [1, 2, 4])
+    model_choice = st.selectbox('Choisissez un modèle', ["Undersampling + Wav2Vec", "Wav2Vec + GradientBoosting", "CNN"])
 
-    if model_choice == "CNN" :
-        cnn  = tb.CNN()
+    if model_choice == "CNN":
+        cnn = tb.CNN()
         predictions = cnn.predict(file_buffer)
         file_buffer.seek(0)
 
     elif model_choice == "Wav2Vec + GradientBoosting" :
-        wvc= tb.Wav2VecClassified()
+        wvc = tb.Wav2VecClassified()
         predictions = wvc.predict(file_buffer)
         file_buffer.seek(0)
 
-    else : 
+    else:
         wvt = tb.Wav2VecTrained()
         predictions = wvt.predict(file_buffer)
         file_buffer.seek(0)
 
     df = tb.transform(predictions)
-    #st.dataframe(df)
 
     st.subheader("Représentation graphique du diagnostic")
-    plots.plot_model(df, file_buffer, None)
+    plots.plot_model(df, file_buffer)
     file_buffer.seek(0)
-    
