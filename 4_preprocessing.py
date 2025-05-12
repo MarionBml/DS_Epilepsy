@@ -7,7 +7,31 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import plotly.express as px
-#from utils.preprocessing_analysis import master
+
+@st.cache_data
+def load_chart_model_performance_analysis():
+    # Valeurs obtenues en faisant tourner le code"preprocessing_analysis.ipynb"
+    dic = {"Isolation Forest 5%": [93.35, 95.45, 96.56],
+        "Centroids": [15.81, 97.61, 5.15],
+        "Default": [97.78, 11.60, 19.65]}
+    df2 = pd.DataFrame(data=dic, index=['Precision', 'Recall', 'F1'])
+    st.dataframe(df2)
+
+    # Reset index to bring metrics as a column
+    df2_melted = df2.transpose().reset_index().melt(id_vars='index', var_name='Metric', value_name='Score')
+
+    # Create grouped bar plot
+    fig = px.bar(
+        df2_melted,
+        x='Metric',
+        y='Score',
+        color='index',  # Different colors for Precision, Recall, F1
+        barmode='group',  # Grouped bars
+        title='Model Performance Comparison',
+        labels={'index': 'Model', 'Score': 'Score (%)'},
+        color_discrete_sequence=px.colors.qualitative.Safe
+    )
+    return fig
 
 st.title('Preprocessing des données')
 st.markdown("""<div style="text-align: justify"> Afin d'explorer la faisabilité de la détection automatique des crises à partir des signaux audio, 
@@ -65,29 +89,7 @@ st.markdown("""* **PCA + IsolationForest** (avec un ratio d’anomalies fixé à
             correspondant à la proportion des crises dans les données d'entraînement)""")
 st.markdown("")
 
-# Valeurs obtenues en faisant tourner le code"preprocessing_analysis.ipynb"
-dic = {"Isolation Forest 5%": [93.35, 95.45, 96.56],
-       "Centroids": [15.81, 97.61, 5.15],
-       "Default": [97.78, 11.60, 19.65]}
-df2 = pd.DataFrame(data=dic, index=['Precision', 'Recall', 'F1'])
-st.dataframe(df2)
-
-# Reset index to bring metrics as a column
-df2_melted = df2.transpose().reset_index().melt(id_vars='index', var_name='Metric', value_name='Score')
-
-# Create grouped bar plot
-fig = px.bar(
-    df2_melted,
-    x='Metric',
-    y='Score',
-    color='index',  # Different colors for Precision, Recall, F1
-    barmode='group',  # Grouped bars
-    title='Model Performance Comparison',
-    labels={'index': 'Model', 'Score': 'Score (%)'},
-    color_discrete_sequence=px.colors.qualitative.Safe
-)
-
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(load_chart_model_performance_analysis(), use_container_width=True)
 
 
 st.markdown("""<div style="text-align: justify"> Les performances ont été évaluées en accuracy, recall et F1-score, 

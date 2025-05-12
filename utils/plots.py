@@ -4,7 +4,7 @@ import plotly.graph_objs as go
 from pydub import AudioSegment
 import numpy as np
 
-
+@st.cache_data
 def plot_trace(samples, sr, df):
     # -------- Forme d'onde --------
     duration = len(samples) / sr
@@ -118,6 +118,7 @@ def transform_audio(file):
     return samples, sr
 
 
+@st.cache_data
 def plot_audio(file):
     samples, sr = transform_audio(file)
     col1, col2 = st.columns(2)
@@ -126,6 +127,7 @@ def plot_audio(file):
     return None
 
 
+@st.cache_data()
 def plot_model(df, file=None):
     samples, sr = transform_audio(file)
     plot_colored_waveform(samples, sr, df)

@@ -7,6 +7,7 @@ import io
 import pickle
 import torch
 from joblib import load
+import streamlit as st
 from datetime import datetime
 from keras.models import load_model
 from tensorflow.keras import backend as K
@@ -104,7 +105,7 @@ def macro_f1_score(y_true, y_pred):
 #         return recordings, sr
 #     return [], None
 
-
+@st.cache_data()
 def safe_load_audio(uploaded_file, sampling_rate=SAMPLING_RATE, duration=DURATION):
     """
     Charge un fichier audio Streamlit (.wav) de manière sécurisée.
@@ -145,6 +146,7 @@ def safe_load_audio(uploaded_file, sampling_rate=SAMPLING_RATE, duration=DURATIO
 
 class CNN():
     def __init__(self):
+        self.model = CNN.load_model()
         return None
 
     def load_audio_cnn(self, file):
@@ -158,7 +160,8 @@ class CNN():
         self.X = np.array(features)
         return np.array(features)
 
-    def load_model(self):
+    @st.cache_resource
+    def load_model():
         write_log('INFO: Loading the CNN Keras model')
         model = load_model(
             'models/wav2vec2_cnn_2sec_model.keras',
@@ -166,7 +169,6 @@ class CNN():
                 'macro_f1_score': macro_f1_score
             },
         )
-        self.model = model
         return model
 
     def predict(self, file: None):
@@ -190,9 +192,14 @@ class CNN():
 
 class Wav2VecTrained():
     def __init__(self):
-        saved_model_path = 'models/wav2vec2_retrained_2sec'
-        self.processor = AutoProcessor.from_pretrained(saved_model_path)
+        self.processor = Wav2VecTrained.load_processor()
+        self.model = Wav2VecTrained.load_model()
         return None
+
+    @st.cache_resource
+    def load_processor():
+        saved_model_path = 'models/wav2vec2_retrained_2sec'
+        return AutoProcessor.from_pretrained(saved_model_path)
 
     def load_audio(self, file):
         audios, sr = safe_load_audio(file)
@@ -231,20 +238,22 @@ class Wav2VecTrained():
         self.predictions = predictions
         return predictions
 
-    def load_model(self):
+    @st.cache_resource
+    def load_model():
         write_log('INFO: Loading Wav2Vec retrained')
         saved_model_path = 'models/wav2vec2_retrained_2sec'
         model = AutoModelForAudioClassification.from_pretrained(saved_model_path)  # Load weights
         model.to("cuda" if torch.cuda.is_available() else "cpu")
-        self.model = model
         return model
 
 
 class Wav2VecClassified():
     def __init__(self):
+        self.model = Wav2VecClassified.load_model()
         return None
 
-    def load_audio(self, file):
+    @st.cache_resource()
+    def load_standard_Wav2Vec():
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         processor = AutoProcessor.from_pretrained("facebook/wav2vec2-base-960h")
         model = Wav2Vec2ForCTC.from_pretrained(
@@ -252,7 +261,10 @@ class Wav2VecClassified():
         ).to(device)
         with open('pca/wav2vec2_classifier_2sec_pca.pickle', 'rb') as f:
             pca = pickle.load(f)
+        return processor, model, pca, device
 
+    def load_audio(self, file):
+        processor, model, pca, device = Wav2VecClassified.load_standard_Wav2Vec()
         audios, sr = safe_load_audio(file)
         features = []
         output_dict = {}
@@ -280,10 +292,10 @@ class Wav2VecClassified():
         self.features = features
         return features
 
-    def load_model(self):
+    @st.cache_resource
+    def load_model():
         write_log('INFO: Loading Wav2Vec classifier')
         model = load("models/wav2vec2_classifier_2sec_model.joblib")
-        self.model = model
         return model
 
     def predict(self, file: str = None):
@@ -312,7 +324,7 @@ class Wav2VecClassified():
 #     wvc = Wav2VecClassified()
 #     wvc.predict(file=file)
 
-
+@st.cache_data()
 def transform(predictions, labels=False, diag=None):
     df = pd.DataFrame(predictions)
     df.columns = ["diagnostic"]

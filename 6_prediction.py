@@ -50,7 +50,7 @@ if bool(uploaded_file):
     # Choix du modèle
     st.subheader("""Choix du modèle""")
     # duration = st.radio('Choisissez la longueur des tranches (en secondes):', [1, 2, 4])
-    model_choice = st.selectbox('Choisissez un modèle', ["Undersampling + Wav2Vec", "Wav2Vec + GradientBoosting", "CNN"])
+    model_choice = st.selectbox('Choisissez un modèle', ["CNN", "Undersampling + Wav2Vec", "Wav2Vec + GradientBoosting"])
 
     if model_choice == "CNN":
         cnn = tb.CNN()
