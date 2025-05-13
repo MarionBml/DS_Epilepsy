@@ -11,11 +11,11 @@ import streamlit as st
 from datetime import datetime
 from keras.models import load_model
 from tensorflow.keras import backend as K
-from transformers import (
-    AutoModelForAudioClassification,
-    AutoProcessor,
-    Wav2Vec2ForCTC,
-)
+# from transformers import (
+#     AutoModelForAudioClassification,
+#     AutoProcessor,
+#     Wav2Vec2ForCTC,
+# )
 
 
 ROOT = '.'
@@ -145,11 +145,12 @@ def safe_load_audio(uploaded_file, sampling_rate=SAMPLING_RATE, duration=DURATIO
 
 
 class CNN():
-    def __init__(self):
-        self.model = CNN.load_model()
+    def __init__():
+        # self.model = CNN.load_model()
         return None
 
-    def load_audio_cnn(self, file):
+    @st.cache_data()
+    def load_audio_cnn(file):
         audios, sr = safe_load_audio(file)
         write_log('INFO: Loading recording data for CNN')
         features = []
@@ -157,7 +158,7 @@ class CNN():
             mfccs = librosa.feature.mfcc(y=audio, sr=sr, n_mfcc=40)
             mfccs_scaled = np.mean(mfccs.T, axis=0)
             features.append(mfccs_scaled)
-        self.X = np.array(features)
+        # self.X = np.array(features)
         return np.array(features)
 
     @st.cache_resource
@@ -171,75 +172,87 @@ class CNN():
         )
         return model
 
-    def predict(self, file: None):
-        if not hasattr(self, 'X'):
-            if file is None:
-                raise Exception(
-                    'ERROR: Cannot load the audio as the file is not provided'
-                )
-            else:
-                self.load_audio_cnn(file=file)
+    @st.cache_data()
+    def predict(file: None):
+        # if not hasattr(self, 'X'):
+        #     if file is None:
+        #         raise Exception(
+        #             'ERROR: Cannot load the audio as the file is not provided'
+        #         )
+        #     else:
+        #         self.load_audio_cnn(file=file)
 
-        if not hasattr(self, 'model'):
-            self.load_model()
+        # if not hasattr(self, 'model'):
+        #     self.load_model()
 
+        X = CNN.load_audio_cnn(file=file)
+        model = CNN.load_model()
         write_log('INFO: Predicting using CNN')
-        prediction_vectors = self.model.predict(self.X)
+        prediction_vectors = model.predict(X)
         predictions = np.argmax(prediction_vectors, axis=1)
-        self.predictions = predictions
+        # self.predictions = predictions
         return predictions
 
 
 class Wav2VecTrained():
-    def __init__(self):
-        self.processor = Wav2VecTrained.load_processor()
-        self.model = Wav2VecTrained.load_model()
+    def __init__():
+        # self.processor = Wav2VecTrained.load_processor()
+        # self.model = Wav2VecTrained.load_model()
         return None
 
     @st.cache_resource
     def load_processor():
+        from transformers import (
+            AutoProcessor,
+        )
         saved_model_path = 'models/wav2vec2_retrained_2sec'
         return AutoProcessor.from_pretrained(saved_model_path)
 
-    def load_audio(self, file):
+    @st.cache_data()
+    def load_audio(file):
         audios, sr = safe_load_audio(file)
         write_log('INFO: Loading recording data for retrained Wav2Vec')
-
-        inputs = self.processor(
+        processor = Wav2VecTrained.load_processor()
+        inputs = processor(
             audios,
             sampling_rate=sr,
             return_tensors="pt",
             padding=True
         )
         input_values = inputs.input_values.squeeze()
-        self.input_values = input_values
+        # Wav2VecTrained.input_values = input_values
         return input_values
 
-    def predict(self, file:  None):
-        if not hasattr(self, 'model'):
-            self.load_model()
+    @st.cache_data()
+    def predict(file:  None):
+        # if not hasattr(self, 'model'):
+        #     self.load_model()
 
-        if not hasattr(self, 'input_values'):
-            if file is None:
-                raise Exception(
-                    'ERROR: Cannot load the audio has the filepath is not provided'
-                )
-            else:
-                self.load_audio(file=file)
-
+        # if not hasattr(self, 'input_values'):
+        #     if file is None:
+        #         raise Exception(
+        #             'ERROR: Cannot load the audio has the filepath is not provided'
+        #         )
+        #     else:
+        #         self.load_audio(file=file)
+        model = Wav2VecTrained.load_model()
+        input_values = Wav2VecTrained.load_audio(file=file)
         write_log('INFO: Predicting using Wav2VecTrained')
         predictions = []
         with torch.no_grad():
-            for batch in self.input_values.unsqueeze(0):
+            for batch in input_values.unsqueeze(0):
                 input_values = batch.to("cuda" if torch.cuda.is_available() else "cpu")
-                logits = self.model(input_values).logits
+                logits = model(input_values).logits
                 predicted_ids = torch.argmax(logits, dim=-1)
                 predictions += predicted_ids.cpu().tolist()
-        self.predictions = predictions
+        # Wav2VecTrained.predictions = predictions
         return predictions
 
     @st.cache_resource
     def load_model():
+        from transformers import (
+            AutoModelForAudioClassification
+        )
         write_log('INFO: Loading Wav2Vec retrained')
         saved_model_path = 'models/wav2vec2_retrained_2sec'
         model = AutoModelForAudioClassification.from_pretrained(saved_model_path)  # Load weights
@@ -248,12 +261,16 @@ class Wav2VecTrained():
 
 
 class Wav2VecClassified():
-    def __init__(self):
-        self.model = Wav2VecClassified.load_model()
+    def __init__():
+        # self.model = Wav2VecClassified.load_model()
         return None
 
     @st.cache_resource()
     def load_standard_Wav2Vec():
+        from transformers import (
+            AutoProcessor,
+            Wav2Vec2ForCTC,
+        )
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         processor = AutoProcessor.from_pretrained("facebook/wav2vec2-base-960h")
         model = Wav2Vec2ForCTC.from_pretrained(
@@ -263,7 +280,8 @@ class Wav2VecClassified():
             pca = pickle.load(f)
         return processor, model, pca, device
 
-    def load_audio(self, file):
+    @st.cache_data()
+    def load_audio(file):
         processor, model, pca, device = Wav2VecClassified.load_standard_Wav2Vec()
         audios, sr = safe_load_audio(file)
         features = []
@@ -289,7 +307,7 @@ class Wav2VecClassified():
                     inplace=True
                 )
                 features = pca.transform(output_df)
-        self.features = features
+        # self.features = features
         return features
 
     @st.cache_resource
@@ -298,17 +316,21 @@ class Wav2VecClassified():
         model = load("models/wav2vec2_classifier_2sec_model.joblib")
         return model
 
-    def predict(self, file: str = None):
-        if not hasattr(self, 'model'):
-            self.load_model()
-        if not hasattr(self, 'input_values'):
-            if file is None:
-                raise Exception('ERROR: Cannot load the audio has the filepath is not provided')
-            else:
-                self.load_audio(file=file)
+    @st.cache_data()
+    def predict(file: str = None):
+        # if not hasattr(self, 'model'):
+        #     self.load_model()
+        # if not hasattr(self, 'input_values'):
+        #     if file is None:
+        #         raise Exception('ERROR: Cannot load the audio has the filepath is not provided')
+        #     else:
+        #         self.load_audio(file=file)
+
+        model = Wav2VecClassified.load_model()
+        features = Wav2VecClassified.load_audio(file=file)
         write_log('INFO: Predicting using Wav2VecClassified')
-        predictions = self.model.predict(self.features)
-        self.predictions = predictions
+        predictions = model.predict(features)
+        # self.predictions = predictions
         return predictions
 
 

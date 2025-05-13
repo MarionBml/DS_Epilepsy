@@ -53,18 +53,18 @@ if bool(uploaded_file):
     model_choice = st.selectbox('Choisissez un modèle', ["CNN", "Undersampling + Wav2Vec", "Wav2Vec + GradientBoosting"])
 
     if model_choice == "CNN":
-        cnn = tb.CNN()
-        predictions = cnn.predict(file_buffer)
+        # CNN = tb.CNN()
+        predictions = tb.CNN.predict(file_buffer)
         file_buffer.seek(0)
 
     elif model_choice == "Wav2Vec + GradientBoosting" :
-        wvc = tb.Wav2VecClassified()
-        predictions = wvc.predict(file_buffer)
+        # wvc = tb.Wav2VecClassified()
+        predictions = tb.Wav2VecClassified.predict(file_buffer)
         file_buffer.seek(0)
 
     else:
-        wvt = tb.Wav2VecTrained()
-        predictions = wvt.predict(file_buffer)
+        # wvt = tb.Wav2VecTrained()
+        predictions = tb.Wav2VecTrained.predict(file_buffer)
         file_buffer.seek(0)
 
     df = tb.transform(predictions)
