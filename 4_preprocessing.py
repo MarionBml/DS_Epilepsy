@@ -73,13 +73,6 @@ st.markdown("")
 st.image("images/4_logistic_regression.png")
 
 st.badge("Amélioration du pipeline et comparaison de méthodes", color='blue')
-st.markdown("""<div style="text-align: justify"> Un premier pipeline d’analyse a été mis en place : 
-            une sélection des meilleures bandes fréquentielles a été effectuée par SelectKBest, 
-            suivie d’une réduction de dimensionnalité par PCA, 
-            avant l'entraînement d’un classificateur de type Gradient Boosting. 
-            Cette première approche n’a toutefois pas produit de résultats satisfaisants, 
-            tant en termes d’accuracy que de F1-score</div>""", unsafe_allow_html=True)
-st.markdown("")
 st.markdown("""<div style="text-align: justify"> Pour rationaliser notre approche et améliorer la robustesse, 
             nous avons abandonné la sélection par KBest au profit d’une réduction unique via PCA. 
             Nous avons ensuite comparé plusieurs pipelines de classification :</div>""", unsafe_allow_html=True)
